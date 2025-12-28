@@ -17,7 +17,7 @@
     },
     { "label": "Kongregate", "path": "https://www.kongregate.com/", "icon": "🎮" },
     { "label": "Poki", "path": "https://poki.com/", "icon": "🎮" },
-    { "label": "Game 5", "path": "/games/game5", "icon": "🎮" },
+    { "label": "G+ Games", "path": "https://sites.google.com/view/drive-u-7-home/home", "icon": "🎮" },
     { "label": "Game 6", "path": "/games/game6", "icon": "🎮" },
     { "label": "Game 7", "path": "/games/game7", "icon": "🎮" },
     { "label": "Game 8", "path": "/games/game8", "icon": "🎮" },
