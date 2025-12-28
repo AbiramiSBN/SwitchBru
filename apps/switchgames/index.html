@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>200 Good Nintendo Switch Games (List)</title>
+  <style>
+    :root{
+      --bg:#070a14;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.14);
+      --text:#eaf0ff;
+      --muted:rgba(234,240,255,.72);
+      --radius:14px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial, sans-serif;
+      background: linear-gradient(180deg, #070a14, #0c1230);
+      color:var(--text);
+    }
+    header{
+      position:sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: rgba(7,10,20,.78);
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .wrap{max-width:920px;margin:0 auto;padding:14px 14px}
+    h1{margin:0;font-size:18px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    input{
+      flex:1 1 240px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      outline:none;
+    }
+    input::placeholder{color:rgba(234,240,255,.55)}
+    button{
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      color:var(--text);
+      font-weight:700;
+      cursor:pointer;
+    }
+    .meta{color:var(--muted);font-size:12px;margin-top:10px}
+    main{max-width:920px;margin:0 auto;padding:14px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:12px;
+    }
+    ol{margin:0;padding-left:20px}
+    li{
+      padding:6px 0;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    li:last-child{border-bottom:none}
+    .small{color:var(--muted);font-size:12px;margin-top:8px}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>200 Good Nintendo Switch Games (List)</h1>
+    <div class="row">
+      <input id="q" type="text" placeholder="Search (e.g., zelda, rpg, co-op)..." />
+      <button id="clear" type="button">Clear</button>
+      <button id="az" type="button">Sort A→Z</button>
+    </div>
+    <div class="meta" id="meta">200 games</div>
+  </div>
+</header>
+
+<main>
+  <div class="card">
+    <ol id="list"></ol>
+    <div class="small">Tip: This is intentionally lightweight for SwitchBru.</div>
+  </div>
+</main>
+
+<script>
+  const GAMES = [
+    "The Legend of Zelda: Breath of the Wild",
+    "The Legend of Zelda: Tears of the Kingdom",
+    "Super Mario Odyssey",
+    "Mario Kart 8 Deluxe",
+    "Super Smash Bros. Ultimate",
+    "Animal Crossing: New Horizons",
+    "Splatoon 3",
+    "Splatoon 2",
+    "Luigi's Mansion 3",
+    "Metroid Dread",
+    "Metroid Prime Remastered",
+    "Kirby and the Forgotten Land",
+    "Super Mario Bros. Wonder",
+    "Super Mario Maker 2",
+    "Super Mario 3D World + Bowser's Fury",
+    "New Super Mario Bros. U Deluxe",
+    "Donkey Kong Country: Tropical Freeze",
+    "Yoshi's Crafted World",
+    "Captain Toad: Treasure Tracker",
+    "Pikmin 4",
+    "Pikmin 3 Deluxe",
+    "Fire Emblem: Three Houses",
+    "Fire Emblem Engage",
+    "Xenoblade Chronicles Definitive Edition",
+    "Xenoblade Chronicles 2",
+    "Xenoblade Chronicles 3",
+    "Mario + Rabbids Kingdom Battle",
+    "Mario + Rabbids Sparks of Hope",
+    "Ring Fit Adventure",
+    "Nintendo Switch Sports",
+    "Mario Tennis Aces",
+    "Mario Golf: Super Rush",
+    "ARMS",
+    "Hyrule Warriors: Age of Calamity",
+    "Pokémon Legends: Arceus",
+    "Pokémon Scarlet",
+    "Pokémon Violet",
+    "Pokémon Sword",
+    "Pokémon Shield",
+    "Pokémon Brilliant Diamond",
+    "Pokémon Shining Pearl",
+    "Pokémon Let's Go, Pikachu!",
+    "Pokémon Let's Go, Eevee!",
+    "Pokémon Mystery Dungeon: Rescue Team DX",
+    "Hades",
+    "Dead Cells",
+    "Hollow Knight",
+    "Celeste",
+    "Stardew Valley",
+    "Slay the Spire",
+    "Into the Breach",
+    "Cuphead",
+    "The Binding of Isaac: Afterbirth+",
+    "Enter the Gungeon",
+    "Katana ZERO",
+    "The Messenger",
+    "Spiritfarer",
+    "Disco Elysium: The Final Cut",
+    "Return of the Obra Dinn",
+    "Baba Is You",
+    "Tetris Effect: Connected",
+    "Tetris 99",
+    "Portal: Companion Collection",
+    "Inside",
+    "Limbo",
+    "A Short Hike",
+    "Untitled Goose Game",
+    "Overcooked! 2",
+    "Overcooked! All You Can Eat",
+    "Moving Out",
+    "Moving Out 2",
+    "Snipperclips - Cut it out, together!",
+    "Human: Fall Flat",
+    "Lovers in a Dangerous Spacetime",
+    "Boomerang Fu",
+    "Ultimate Chicken Horse",
+    "Among Us",
+    "Fall Guys",
+    "Super Bomberman R",
+    "Puyo Puyo Tetris",
+    "Puyo Puyo Tetris 2",
+    "Wargroove",
+    "Civilization VI",
+    "Northgard",
+    "Factorio",
+    "Minecraft",
+    "Terraria",
+    "Cities: Skylines",
+    "Cozy Grove",
+    "Rune Factory 4 Special",
+    "Story of Seasons: Friends of Mineral Town",
+    "Unpacking",
+    "A Little to the Left",
+    "No Man's Sky",
+    "Subnautica",
+    "Subnautica: Below Zero",
+    "Little Nightmares",
+    "Little Nightmares II",
+    "Okami HD",
+    "Immortals Fenyx Rising",
+    "Tunic",
+    "Dredge",
+    "Dave the Diver",
+    "Cult of the Lamb",
+    "Vampire Survivors",
+    "Risk of Rain 2",
+    "Spelunky 2",
+    "Rogue Legacy",
+    "Rogue Legacy 2",
+    "Hotline Miami Collection",
+    "Neon White",
+    "Gris",
+    "Firewatch",
+    "Night in the Woods",
+    "What Remains of Edith Finch",
+    "Kentucky Route Zero: TV Edition",
+    "Oxenfree",
+    "Oxenfree II: Lost Signals",
+    "The Stanley Parable: Ultra Deluxe",
+    "The Talos Principle",
+    "Katamari Damacy REROLL",
+    "A Hat in Time",
+    "SteamWorld Dig 2",
+    "SteamWorld Heist",
+    "SteamWorld Quest: Hand of Gilgamech",
+    "Rayman Legends: Definitive Edition",
+    "Sonic Mania",
+    "Shovel Knight: Treasure Trove",
+    "Ori and the Blind Forest: Definitive Edition",
+    "Ori and the Will of the Wisps",
+    "Axiom Verge",
+    "Axiom Verge 2",
+    "Guacamelee! Super Turbo Championship Edition",
+    "Guacamelee! 2",
+    "Mega Man 11",
+    "Crash Bandicoot N. Sane Trilogy",
+    "Spyro Reignited Trilogy",
+    "Teenage Mutant Ninja Turtles: Shredder's Revenge",
+    "Streets of Rage 4",
+    "DOOM (2016)",
+    "DOOM Eternal",
+    "Wolfenstein II: The New Colossus",
+    "BioShock: The Collection",
+    "Borderlands Legendary Collection",
+    "Metro 2033 Redux",
+    "Metro: Last Light Redux",
+    "Fortnite",
+    "Apex Legends",
+    "Warframe",
+    "Rocket League",
+    "Tony Hawk's Pro Skater 1 + 2",
+    "Need for Speed: Hot Pursuit Remastered",
+    "Burnout Paradise Remastered",
+    "F-Zero 99",
+    "Dragon Quest XI S: Echoes of an Elusive Age – Definitive Edition",
+    "Dragon Quest Builders",
+    "Dragon Quest Builders 2",
+    "Dragon Quest Monsters: The Dark Prince",
+    "Octopath Traveler",
+    "Octopath Traveler II",
+    "Bravely Default II",
+    "Live A Live",
+    "Tactics Ogre: Reborn",
+    "Triangle Strategy",
+    "Final Fantasy VII",
+    "Final Fantasy VIII Remastered",
+    "Final Fantasy IX",
+    "Final Fantasy X/X-2 HD Remaster",
+    "Final Fantasy XII: The Zodiac Age",
+    "Persona 5 Royal",
+    "Persona 4 Golden",
+    "Shin Megami Tensei V",
+    "NieR:Automata The End of YoRHa Edition",
+    "The Witcher 3: Wild Hunt — Complete Edition",
+    "Skyrim",
+    "Divinity: Original Sin 2 — Definitive Edition",
+    "Baldur's Gate and Baldur's Gate II: Enhanced Editions",
+    "Planescape: Torment and Icewind Dale: Enhanced Editions",
+    "Tales of Vesperia: Definitive Edition",
+    "Ys VIII: Lacrimosa of Dana",
+    "Ys IX: Monstrum Nox",
+    "Ni no Kuni: Wrath of the White Witch",
+    "Ni no Kuni II: Revenant Kingdom",
+    "Dragon's Dogma: Dark Arisen",
+    "Dark Souls: Remastered",
+    "Monster Hunter Rise",
+    "Monster Hunter Generations Ultimate",
+    "Monster Hunter Stories 2: Wings of Ruin",
+    "Diablo III: Eternal Collection",
+    "Diablo II: Resurrected",
+    "Torchlight II",
+    "Undertale",
+    "Deltarune (Chapter 1&2)",
+    "13 Sentinels: Aegis Rim",
+    "Ace Attorney Trilogy",
+    "The Great Ace Attorney Chronicles",
+    "AI: The Somnium Files",
+    "AI: The Somnium Files – nirvanA Initiative",
+    "Danganronpa Decadence",
+    "Dragon Ball FighterZ",
+    "Mortal Kombat 11",
+    "Street Fighter 30th Anniversary Collection",
+    "Castlevania Anniversary Collection",
+    "Contra Anniversary Collection",
+    "Sega Genesis Classics",
+    "Wargroove 2",
+    "Sea of Stars",
+    "Chained Echoes",
+    "Theatrhythm Final Bar Line",
+    "Taiko no Tatsujin: Rhythm Festival",
+    "Just Dance 2024 Edition",
+    "Cadence of Hyrule",
+    "Crypt of the NecroDancer",
+    "Sayonara Wild Hearts",
+    "The Outer Worlds"
+  ];
+
+  // Deduplicate just in case + keep it stable
+  const ALL = Array.from(new Set(GAMES));
+
+  const q = document.getElementById("q");
+  const list = document.getElementById("list");
+  const meta = document.getElementById("meta");
+
+  function render(arr){
+    meta.textContent = `${arr.length} game${arr.length===1?"":"s"}`;
+    list.innerHTML = arr.map(x=>`<li>${escapeHtml(x)}</li>`).join("");
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  function filter(){
+    const s = (q.value||"").trim().toLowerCase();
+    if (!s) return ALL.slice();
+    return ALL.filter(x=>x.toLowerCase().includes(s));
+  }
+
+  document.getElementById("clear").addEventListener("click", ()=>{
+    q.value = "";
+    render(ALL);
+    q.focus();
+  });
+
+  document.getElementById("az").addEventListener("click", ()=>{
+    const arr = filter().slice().sort((a,b)=>a.localeCompare(b));
+    render(arr);
+  });
+
+  q.addEventListener("input", ()=> render(filter()));
+
+  render(ALL);
+</script>
+</body>
+</html>
