@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SwitchBru • Games</title>
+
+        <style>
+            :root {
+                --text: #eaf0ff;
+                --muted: rgba(234, 240, 255, 0.75);
+                --card: rgba(0, 0, 0, 0.6);
+                --border: rgba(255, 255, 255, 0.18);
+                --blue: #3b82f6;
+                --blue2: #2563eb;
+                --radius: 18px;
+                --focus: rgba(255, 255, 255, 0.45);
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                font-family: system-ui, Arial, sans-serif;
+                color: var(--text);
+                background:
+                    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.82)),
+                    url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
+                padding: 22px;
+            }
+
+            .panel {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: var(--radius);
+                padding: 18px;
+                backdrop-filter: blur(6px);
+            }
+
+            .top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-bottom: 12px;
+            }
+
+            h1 {
+                margin: 0;
+                font-size: 30px;
+            }
+
+            .back {
+                border-radius: 999px;
+                padding: 10px 14px;
+                border: 1px solid var(--border);
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text);
+                cursor: pointer;
+            }
+
+            .controls {
+                display: flex;
+                gap: 10px;
+                flex-wrap: wrap;
+                align-items: center;
+                margin: 10px 0 14px;
+            }
+
+            .controls input,
+            .controls select {
+                padding: 10px 12px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+                background: rgba(0, 0, 0, 0.25);
+                color: var(--text);
+                outline: none;
+            }
+
+            .controls input {
+                width: min(420px, 100%);
+            }
+
+            .hint {
+                font-size: 12px;
+                color: rgba(234, 240, 255, 0.65);
+                margin-top: 8px;
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
+            }
+
+            @media (min-width: 720px) {
+                .grid {
+                    grid-template-columns: repeat(5, 1fr);
+                }
+            }
+
+            .btnWrap {
+                position: relative;
+            }
+
+            .btn {
+                width: 100%;
+                border: none;
+                border-radius: 16px;
+                padding: 14px 14px 14px 12px;
+                min-height: 86px;
+                cursor: pointer;
+                background: var(--blue);
+                color: white;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transition:
+                    transform 0.15s ease,
+                    background 0.15s ease;
+                text-align: left;
+                outline: none;
+            }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                background: var(--blue2);
+            }
+
+            .btn:focus {
+                box-shadow: 0 0 0 3px var(--focus);
+            }
+
+            .icon {
+                width: 44px;
+                height: 44px;
+                border-radius: 14px;
+                background: rgba(0, 0, 0, 0.25);
+                display: grid;
+                place-items: center;
+                font-size: 22px;
+                flex-shrink: 0;
+                box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+                user-select: none;
+            }
+
+            .label span {
+                display: block;
+                font-weight: 800;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 130px;
+            }
+
+            .label small {
+                display: block;
+                font-size: 12px;
+                opacity: 0.85;
+                margin-top: 4px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 130px;
+            }
+
+            .pin {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 32px;
+                height: 32px;
+                border-radius: 12px;
+                border: 1px solid rgba(255, 255, 255, 0.22);
+                background: rgba(0, 0, 0, 0.2);
+                color: white;
+                cursor: pointer;
+                display: grid;
+                place-items: center;
+                user-select: none;
+            }
+            .pin.pinned {
+                background: rgba(255, 215, 0, 0.22);
+                border-color: rgba(255, 215, 0, 0.55);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="panel">
+            <div class="top">
+                <h1>Games</h1>
+                <button class="back" id="backBtn">← Home</button>
+            </div>
+
+            <div class="controls">
+                <input
+                    id="search"
+                    type="text"
+                    placeholder="Search games…"
+                    autocomplete="off"
+                />
+                <select id="sort">
+                    <option value="pinned">Pinned first</option>
+                    <option value="az">A → Z</option>
+                    <option value="za">Z → A</option>
+                </select>
+            </div>
+
+            <div class="grid" id="grid" aria-label="Games grid"></div>
+
+            <div class="hint">
+                Controls: D-pad / Arrow keys to move • A/Enter to open •
+                B/Backspace/Esc to go Home • ⭐ to pin
+            </div>
+        </div>
+
+        <script>
+            const CATALOG_URL = "/JSON/catalog.json";
+            const PIN_KEY = "sb_pins_games"; // localStorage best-effort
+
+            const grid = document.getElementById("grid");
+            const searchEl = document.getElementById("search");
+            const sortEl = document.getElementById("sort");
+            const backBtn = document.getElementById("backBtn");
+
+            backBtn.onclick = () => (location.href = "/");
+
+            function readPins() {
+                try {
+                    return new Set(
+                        JSON.parse(localStorage.getItem(PIN_KEY) || "[]"),
+                    );
+                } catch {
+                    return new Set();
+                }
+            }
+            function writePins(pinSet) {
+                try {
+                    localStorage.setItem(PIN_KEY, JSON.stringify([...pinSet]));
+                } catch {}
+            }
+
+            let rawItems = [];
+            let renderedButtons = []; // focusable .btn elements
+
+            function normalize(s) {
+                return String(s || "").toLowerCase();
+            }
+
+            function sortItems(items, pins) {
+                const mode = sortEl.value;
+
+                const byLabelAZ = (a, b) => a.label.localeCompare(b.label);
+                const byLabelZA = (a, b) => b.label.localeCompare(a.label);
+
+                if (mode === "az") return [...items].sort(byLabelAZ);
+                if (mode === "za") return [...items].sort(byLabelZA);
+
+                // pinned first (then A->Z)
+                return [...items].sort((a, b) => {
+                    const ap = pins.has(a.path) ? 0 : 1;
+                    const bp = pins.has(b.path) ? 0 : 1;
+                    if (ap !== bp) return ap - bp;
+                    return byLabelAZ(a, b);
+                });
+            }
+
+            function filterItems(items) {
+                const q = normalize(searchEl.value).trim();
+                if (!q) return items;
+                return items.filter(
+                    (it) =>
+                        normalize(it.label).includes(q) ||
+                        normalize(it.path).includes(q),
+                );
+            }
+
+            function makeCard(item, pins) {
+                const wrap = document.createElement("div");
+                wrap.className = "btnWrap";
+
+                const btn = document.createElement("button");
+                btn.className = "btn";
+                btn.type = "button";
+                btn.dataset.path = item.path;
+                btn.dataset.label = item.label;
+                btn.tabIndex = 0;
+
+                const icon = item.icon || "🎮";
+
+                btn.innerHTML = `
+        <div class="icon">${icon}</div>
+        <div class="label">
+          <span>${item.label}</span>
+          <small>${item.path}</small>
+        </div>
+      `;
+
+                btn.onclick = () => {
+                    location.href = item.path;
+                };
+
+                const pinBtn = document.createElement("button");
+                pinBtn.className =
+                    "pin" + (pins.has(item.path) ? " pinned" : "");
+                pinBtn.type = "button";
+                pinBtn.title = "Pin";
+                pinBtn.textContent = "★";
+
+                pinBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const p = readPins();
+                    if (p.has(item.path)) p.delete(item.path);
+                    else p.add(item.path);
+                    writePins(p);
+                    render(); // re-sort if needed
+                };
+
+                wrap.appendChild(btn);
+                wrap.appendChild(pinBtn);
+                return { wrap, btn };
+            }
+
+            function render() {
+                const pins = readPins();
+                const filtered = filterItems(rawItems);
+                const sorted = sortItems(filtered, pins);
+
+                grid.innerHTML = "";
+                renderedButtons = [];
+
+                sorted.forEach((item) => {
+                    const { wrap, btn } = makeCard(item, pins);
+                    grid.appendChild(wrap);
+                    renderedButtons.push(btn);
+                });
+
+                // Keep focus sane
+                if (renderedButtons.length) {
+                    // Don’t steal focus if user is typing in search
+                    if (document.activeElement !== searchEl)
+                        renderedButtons[0].focus();
+                }
+            }
+
+            // --- Controller + keyboard navigation (grid-aware) ---
+            function getCols() {
+                // match CSS breakpoints: 5 cols >=720px else 2
+                return window.innerWidth >= 720 ? 5 : 2;
+            }
+
+            function moveFocus(delta) {
+                const active = document.activeElement;
+                const idx = renderedButtons.indexOf(active);
+                if (idx === -1) return;
+
+                const cols = getCols();
+                let next = idx;
+
+                if (delta === "left") next = Math.max(0, idx - 1);
+                if (delta === "right")
+                    next = Math.min(renderedButtons.length - 1, idx + 1);
+                if (delta === "up") next = Math.max(0, idx - cols);
+                if (delta === "down")
+                    next = Math.min(renderedButtons.length - 1, idx + cols);
+
+                if (next !== idx) renderedButtons[next].focus();
+            }
+
+            function activateFocused() {
+                const active = document.activeElement;
+                if (active && active.classList.contains("btn")) active.click();
+            }
+
+            function goBack() {
+                location.href = "/";
+            }
+
+            document.addEventListener("keydown", (e) => {
+                // Let user type in search
+                if (document.activeElement === searchEl) {
+                    if (e.key === "Escape") {
+                        searchEl.blur();
+                        renderedButtons[0]?.focus();
+                    }
+                    return;
+                }
+
+                if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    moveFocus("left");
+                } else if (e.key === "ArrowRight") {
+                    e.preventDefault();
+                    moveFocus("right");
+                } else if (e.key === "ArrowUp") {
+                    e.preventDefault();
+                    moveFocus("up");
+                } else if (e.key === "ArrowDown") {
+                    e.preventDefault();
+                    moveFocus("down");
+                } else if (e.key === "Enter") {
+                    e.preventDefault();
+                    activateFocused();
+                } else if (e.key === "Backspace" || e.key === "Escape") {
+                    e.preventDefault();
+                    goBack();
+                }
+            });
+
+            // Gamepad (best-effort): D-pad + A/B
+            let gpPrev = {
+                up: false,
+                down: false,
+                left: false,
+                right: false,
+                a: false,
+                b: false,
+            };
+            function pressed(btn) {
+                return btn && btn.pressed === true;
+            }
+
+            function pollGamepad() {
+                const gps = navigator.getGamepads
+                    ? navigator.getGamepads()
+                    : null;
+                const gp = gps && gps[0];
+                if (gp) {
+                    // Standard mapping indices:
+                    // 12 up, 13 down, 14 left, 15 right, 0 A, 1 B
+                    const now = {
+                        up: pressed(gp.buttons[12]),
+                        down: pressed(gp.buttons[13]),
+                        left: pressed(gp.buttons[14]),
+                        right: pressed(gp.buttons[15]),
+                        a: pressed(gp.buttons[0]),
+                        b: pressed(gp.buttons[1]),
+                    };
+
+                    // edge-trigger so holding doesn't spam too fast
+                    if (now.left && !gpPrev.left) moveFocus("left");
+                    if (now.right && !gpPrev.right) moveFocus("right");
+                    if (now.up && !gpPrev.up) moveFocus("up");
+                    if (now.down && !gpPrev.down) moveFocus("down");
+                    if (now.a && !gpPrev.a) activateFocused();
+                    if (now.b && !gpPrev.b) goBack();
+
+                    gpPrev = now;
+                }
+                requestAnimationFrame(pollGamepad);
+            }
+            pollGamepad();
+
+            // --- Load data ---
+            searchEl.addEventListener("input", render);
+            sortEl.addEventListener("change", render);
+            window.addEventListener("resize", () => {
+                /* grid columns change */
+            });
+
+            fetch(CATALOG_URL, { cache: "no-store" })
+                .then((r) => r.json())
+                .then((data) => {
+                    rawItems = (data.games || []).slice(0, 10).map((it) => ({
+                        label: it.label || "Unnamed",
+                        path: it.path || "#",
+                        icon: it.icon || "🎮",
+                    }));
+                    render();
+                })
+                .catch((err) =>
+                    console.error("Failed to load catalog.json", err),
+                );
+        </script>
+    </body>
+</html>
