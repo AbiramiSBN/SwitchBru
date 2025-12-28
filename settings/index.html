@@ -1,225 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SwitchBru • Settings</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SwitchBru • Settings</title>
 
-  <style>
-    :root{
-      --text:#eaf0ff;
-      --muted: rgba(234,240,255,0.75);
-      --card: rgba(0,0,0,0.60);
-      --border: rgba(255,255,255,0.18);
-      --blue: #3b82f6;
-      --blue2: #2563eb;
-      --radius: 18px;
-    }
-    *{ box-sizing:border-box; }
-    body{
-      margin:0;
-      min-height:100vh;
-      font-family: system-ui, Arial, sans-serif;
-      color: var(--text);
-      background:
-        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.82)),
-        url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
-      padding: 22px;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-    }
-    .panel{
-      width:min(980px, 100%);
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 18px;
-      backdrop-filter: blur(6px);
-    }
-    .top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-bottom: 14px;
-    }
-    h1{ margin:0; font-size: 30px; }
-    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; }
-    button{
-      border:none;
-      border-radius: 999px;
-      padding: 10px 14px;
-      cursor:pointer;
-      background: rgba(255,255,255,0.12);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.18);
-    }
-    button.primary{
-      background: var(--blue);
-      border-color: rgba(255,255,255,0.20);
-    }
-    button.primary:hover{ background: var(--blue2); }
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 10px;
-    }
-    @media (min-width: 760px){
-      .grid{ grid-template-columns: 1fr 1fr; }
-    }
-    .card{
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 14px;
-    }
-    .card h2{
-      margin: 0 0 10px;
-      font-size: 18px;
-    }
-    label{
-      display:block;
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-    select, input[type="text"]{
-      width:100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.25);
-      color: var(--text);
-      outline: none;
-    }
-    .toggleRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(234,240,255,0.6);
-    }
-    .status{
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.14);
-      background: rgba(0,0,0,0.22);
-      color: rgba(234,240,255,0.85);
-      font-size: 13px;
-      display:none;
-    }
-  </style>
+<style>
+:root{
+  --text:#ffffff;
+  --muted: rgba(255,255,255,0.75);
+  --card: rgba(0,0,0,0.60);
+  --border: rgba(255,255,255,0.18);
+  --blue:#3b82f6;
+  --blue2:#2563eb;
+  --radius:18px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:system-ui,Arial,sans-serif;
+  color:var(--text);
+  background:
+    linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.82)),
+    url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
+  padding:22px;
+  display:flex;
+  justify-content:center;
+}
+.panel{
+  width:min(1000px,100%);
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  backdrop-filter:blur(6px);
+}
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:14px;
+}
+h1{margin:0;font-size:30px}
+button{
+  border-radius:999px;
+  padding:10px 14px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.12);
+  color:var(--text);
+  cursor:pointer;
+}
+button.primary{
+  background:var(--blue);
+}
+button.primary:hover{background:var(--blue2)}
+.grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+@media(min-width:800px){
+  .grid{grid-template-columns:1fr 1fr}
+}
+.card{
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:14px;
+}
+.card h2{margin:0 0 10px;font-size:18px}
+label{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+input,select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.25);
+  color:var(--text);
+}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.preview{
+  margin-top:10px;
+  height:140px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.65)),
+    url("/assets/wallpaper.jpeg") center/cover no-repeat;
+}
+.colorRow{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+input[type=color]{
+  width:56px;
+  height:44px;
+  border-radius:12px;
+  padding:4px;
+}
+.status{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:12px;
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.16);
+  display:none;
+  font-size:13px;
+}
+.hint{
+  margin-top:10px;
+  font-size:12px;
+  color:rgba(255,255,255,.6);
+}
+</style>
 </head>
 
 <body>
-  <main class="panel">
-    <div class="top">
-      <h1>Settings</h1>
-      <div class="btnRow">
-        <button onclick="location.href='/'">← Home</button>
-        <button class="primary" onclick="save()">Save</button>
-        <button onclick="resetAll()">Reset</button>
+<main class="panel">
+  <div class="top">
+    <h1>Settings</h1>
+    <div class="row">
+      <button onclick="location.href='/'">← Home</button>
+      <button class="primary" onclick="save()">Save</button>
+      <button onclick="resetAll()">Reset</button>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- WALLPAPER -->
+    <div class="card">
+      <h2>Wallpaper</h2>
+
+      <label>Preset wallpapers</label>
+      <select id="preset"></select>
+
+      <div class="row">
+        <button onclick="previewPreset()">Preview preset</button>
+      </div>
+
+      <label style="margin-top:12px">Custom wallpaper URL</label>
+      <input id="wallUrl" type="url" placeholder="https://example.com/image.jpg"/>
+
+      <div class="row">
+        <button onclick="previewUrl()">Preview URL</button>
+        <button onclick="testUrl()">Test wallpaper</button>
+      </div>
+
+      <div class="preview" id="preview"></div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="card">
+      <h2>Colors</h2>
+
+      <label>Global text</label>
+      <div class="colorRow">
+        <input type="color" id="textColor"/>
+        <strong id="textVal"></strong>
+      </div>
+
+      <label style="margin-top:10px">Title</label>
+      <div class="colorRow">
+        <input type="color" id="titleColor"/>
+        <strong id="titleVal"></strong>
+      </div>
+
+      <label style="margin-top:10px">Tile labels</label>
+      <div class="colorRow">
+        <input type="color" id="tileColor"/>
+        <strong id="tileVal"></strong>
+      </div>
+
+      <label style="margin-top:10px">Buttons</label>
+      <div class="colorRow">
+        <input type="color" id="buttonColor"/>
+        <strong id="btnVal"></strong>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="card">
-        <h2>Theme</h2>
-        <label for="theme">Tile theme</label>
-        <select id="theme">
-          <option value="dark">Dark (default vibe)</option>
-          <option value="light">Light (glass)</option>
-          <option value="neon">Neon (cyan glow)</option>
-        </select>
+    <!-- HOME UI -->
+    <div class="card">
+      <h2>Home UI</h2>
+
+      <label>Tile size</label>
+      <select id="tileSize">
+        <option value="small">Small</option>
+        <option value="normal">Normal</option>
+        <option value="large">Large</option>
+      </select>
+
+      <div class="row">
+        <label><input type="checkbox" id="glow"/> Title glow</label>
       </div>
 
-      <div class="card">
-        <h2>Layout</h2>
-        <label for="tileSize">Home tile size</label>
-        <select id="tileSize">
-          <option value="normal">Normal</option>
-          <option value="small">Small</option>
-          <option value="large">Large</option>
-        </select>
-      </div>
-
-      <div class="card">
-        <h2>Title</h2>
-        <div class="toggleRow">
-          <div>
-            <div style="font-weight:700;">Title glow bloom</div>
-            <div style="font-size:12px; color: rgba(234,240,255,0.65);">Makes the title glow like the Seraph screen</div>
-          </div>
-          <input id="titleGlow" type="checkbox" />
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Version text</h2>
-        <label for="versionText">Shown under the title</label>
-        <input id="versionText" type="text" placeholder="version 10" />
-      </div>
+      <label style="margin-top:10px">Version text</label>
+      <input id="versionText" type="text"/>
     </div>
 
-    <div class="status" id="status"></div>
-    <div class="hint">
-      These settings save in your browser (localStorage). Hit Home to see changes.
-    </div>
-  </main>
+  </div>
 
-  <script>
-    const KEY = "sb_settings";
-    const statusEl = document.getElementById("status");
+  <div class="status" id="status"></div>
+  <div class="hint">All settings are cosmetic and saved best-effort on Switch.</div>
+</main>
 
-    function showStatus(msg){
-      statusEl.textContent = msg;
-      statusEl.style.display = "block";
-      setTimeout(() => statusEl.style.display = "none", 2500);
-    }
+<script>
+const KEY="sb_settings";
+const statusEl=document.getElementById("status");
+const preview=document.getElementById("preview");
+const preset=document.getElementById("preset");
 
-    function load(){
-      let s = null;
-      try { s = JSON.parse(localStorage.getItem(KEY) || "null"); } catch {}
-      s = s || {
-        theme: "dark",
-        tileSize: "normal",
-        titleGlow: true,
-        versionText: "version 10"
-      };
+function msg(t){statusEl.textContent=t;statusEl.style.display="block";setTimeout(()=>statusEl.style.display="none",2500)}
 
-      document.getElementById("theme").value = s.theme || "dark";
-      document.getElementById("tileSize").value = s.tileSize || "normal";
-      document.getElementById("titleGlow").checked = !!s.titleGlow;
-      document.getElementById("versionText").value = s.versionText || "version 10";
-    }
+function populate(){
+  for(let i=1;i<=10;i++){
+    let o=document.createElement("option");
+    o.value=`/assets/wallpaper${i}.jpeg`;
+    o.textContent=`wallpaper${i}.jpeg`;
+    preset.appendChild(o);
+  }
+  let o=document.createElement("option");
+  o.value="/assets/wallpaper.jpeg";
+  o.textContent="wallpaper.jpeg (legacy)";
+  preset.appendChild(o);
+}
 
-    function save(){
-      const s = {
-        theme: document.getElementById("theme").value,
-        tileSize: document.getElementById("tileSize").value,
-        titleGlow: document.getElementById("titleGlow").checked,
-        versionText: document.getElementById("versionText").value
-      };
-      localStorage.setItem(KEY, JSON.stringify(s));
-      showStatus("Saved ✅ Go Home to see it.");
-    }
+function setPreview(u){
+  preview.style.background=
+    `linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.65)),url("${u}") center/cover no-repeat`;
+}
 
-    function resetAll(){
-      localStorage.removeItem(KEY);
-      load();
-      showStatus("Reset to defaults ✅");
-    }
+function validImg(u){
+  return /^https?:\/\//i.test(u)&&/\.(png|jpe?g|webp)$/i.test(u.split("?")[0]);
+}
 
-    load();
-  </script>
+function previewPreset(){setPreview(preset.value);msg("Preset previewed")}
+function previewUrl(){
+  let u=wallUrl.value.trim();
+  if(!validImg(u)) return msg("Invalid image URL ❌");
+  setPreview(u);msg("URL previewed")
+}
+function testUrl(){
+  let u=wallUrl.value.trim();
+  if(!validImg(u)) return msg("Invalid image URL ❌");
+  let img=new Image();
+  img.onload=()=>msg("Wallpaper loaded ✅");
+  img.onerror=()=>msg("Failed to load ❌");
+  img.src=u;
+}
+
+function load(){
+  populate();
+  let s;
+  try{s=JSON.parse(localStorage.getItem(KEY))}catch{}
+  s=s||{
+    wallpaperPreset:"/assets/wallpaper1.jpeg",
+    wallpaperUrl:"",
+    text:"#ffffff",
+    title:"#ffffff",
+    tile:"#ffffff",
+    button:"#ffffff",
+    tileSize:"normal",
+    glow:true,
+    version:"version 10"
+  };
+  preset.value=s.wallpaperPreset;
+  wallUrl.value=s.wallpaperUrl;
+  setPreview(s.wallpaperUrl&&validImg(s.wallpaperUrl)?s.wallpaperUrl:s.wallpaperPreset);
+
+  textColor.value=s.text;textVal.textContent=s.text;
+  titleColor.value=s.title;titleVal.textContent=s.title;
+  tileColor.value=s.tile;tileVal.textContent=s.tile;
+  buttonColor.value=s.button;btnVal.textContent=s.button;
+
+  tileSize.value=s.tileSize;
+  glow.checked=s.glow;
+  versionText.value=s.version;
+}
+
+function save(){
+  const s={
+    wallpaperPreset:preset.value,
+    wallpaperUrl:validImg(wallUrl.value)?wallUrl.value:"",
+    text:textColor.value,
+    title:titleColor.value,
+    tile:tileColor.value,
+    button:buttonColor.value,
+    tileSize:tileSize.value,
+    glow:glow.checked,
+    version:versionText.value
+  };
+  try{localStorage.setItem(KEY,JSON.stringify(s))}catch{}
+  msg("Saved ✅ Go Home")
+}
+
+function resetAll(){
+  try{localStorage.removeItem(KEY)}catch{}
+  load();msg("Reset to defaults")
+}
+
+["text","title","tile","button"].forEach(id=>{
+  document.getElementById(id+"Color").addEventListener("input",e=>{
+    document.getElementById(id+"Val").textContent=e.target.value
+  })
+})
+
+load();
+</script>
 </body>
 </html>
-
