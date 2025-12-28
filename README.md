@@ -182,7 +182,3 @@ Designed for Nintendo Switch browser limitations
 ## License
 
 MIT 
-
-
-Just say the word.
-```
