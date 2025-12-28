@@ -1,183 +1,159 @@
-# SwitchBru Applications Launcher
+# SwitchBru Launcher
 
-A modern, Nintendo Switch–friendly web launcher for **SwitchBru DNS** environments.
-
-This project replaces the old SwitchBru dashboard with a clean launcher UI that supports:
-- Games & apps sections
-- Controller / D-pad navigation
-- Search & URL bar (Google-powered)
-- Bookmarks
-- JSON-driven app/game lists
-- Lightweight, Switch browser–safe HTML/CSS/JS
+A custom web-based launcher designed for the Nintendo Switch hidden browser using **SwitchBru DNS**.  
+This project provides a clean, controller-friendly home screen with **Games, Apps, Web**, and **Settings**, plus search, bookmarks, and customization.
 
 ---
 
-## Features
+## ✨ Features
 
-### 🏠 Home Screen
-- **Glowy title UI**: *SwitchBru Applications*
-- **Three main tiles**:
-  - 🎮 Games
-  - 🧩 Apps
-  - ⚙️ Settings
-- White text optimized for dark backgrounds
-- Controller-friendly layout
+### 🏠 Home
+- Large, rounded tiles (Games / Apps / Web / Settings)
+- URL + Google search bar
+- Hard-coded quick bookmarks:
+  - Google
+  - SwitchBru DNS (legacy dashboard)
+  - SwitchBru Games Hub
+- Glowy title bloom
+- Fully controller-friendly
 
-### 🔍 Search / Omnibox
-- Type a **URL** (e.g. `youtube.com`) → opens directly
-- Type a **search query** → searches using **Google**
-- One-click **Go** button
-- Works on Switch browser
+### 🎮 Games
+- Loads dynamically from `catalog.json`
+- Supports:
+  - Local games (e.g. Dino Game)
+  - External game portals (ArmorGames, Kongregate, Poki, etc.)
+- Search, sort, pin
+- D-pad / keyboard navigation
 
-### 🔖 Bookmarks
-- Built-in bookmark to:
-  - **Old SwitchBru Dashboard**  
-    `https://dns.switchbru.com/`
-- Easily extendable to more bookmarks
+### 🧩 Apps
+- Loads dynamically from `catalog.json`
+- Includes AI apps like **PerminiGPT**
+- Search + quick launch
+- Switch-safe layout
 
-### 🎮 Games & Apps Pages
-- Loaded dynamically from JSON
-- Icons supported (emoji or later images)
-- Features:
-  - 🔎 Search
-  - ⭐ Pin / unpin items
-  - ↕ Sort (Pinned first, A→Z, Z→A)
-  - 🎮 Controller navigation (D-pad, A/B)
-  - ⌨ Keyboard navigation fallback
+### 🌐 Web
+- Curated list of websites known to work on SwitchBru
+- Examples:
+  - Google
+  - Wikipedia
+  - SwitchBru DNS
+  - FBI Bears
+  - Moldeo tools
+- Pin, search, sort
+- Controller navigation
 
 ### ⚙️ Settings
-- UI customization options
-- Designed for cosmetic preferences
-- Uses `localStorage` **best-effort** (non-critical)
+- Wallpaper presets (`wallpaper1.jpeg` → `wallpaper10.jpeg`)
+- Custom wallpaper URL (png / jpg / jpeg / webp)
+- Live preview + test
+- Text color customization:
+  - Global text
+  - Title
+  - Tile labels
+  - Buttons
+- Tile size (small / normal / large)
+- Title glow toggle
+- Version text
+- Saved via `localStorage` (best-effort on Switch)
 
 ---
 
-## Folder Structure
+## 📁 Project Structure
 
 ```
 
 /
-├─ index.html              # Home launcher
+├─ index.html                # Home screen
 ├─ games/
-│  └─ index.html           # Games list
+│  └─ index.html             # Games page
 ├─ apps/
-│  └─ index.html           # Apps list
+│  └─ index.html             # Apps page
+├─ web/
+│  └─ index.html             # Web bookmarks page
 ├─ settings/
-│  └─ index.html           # Customization UI
+│  └─ index.html             # Settings UI
 ├─ JSON/
-│  └─ catalog.json         # Games & apps data
+│  └─ catalog.json           # Games / Apps / Web config
 ├─ assets/
-│  ├─ wallpaper.jpeg       # Background
-│  └─ (optional icons)
-
-```
-
----
-
-## JSON Format
-
-All games and apps are defined in:
-
-```
-
-/JSON/catalog.json
+│  ├─ wallpaper.jpeg
+│  ├─ wallpaper1.jpeg
+│  ├─ wallpaper2.jpeg
+│  └─ ...
+└─ README.md
 
 ````
 
-Example:
+---
+
+## 📄 `catalog.json` Format
 
 ```json
 {
   "games": [
-    {
-      "label": "Dino Game",
-      "path": "/Dino-Game",
-      "icon": "🦖"
-    },
-    {
-      "label": "Seraph Games",
-      "path": "https://seraphgames.vercel.app",
-      "icon": "🌐"
-    }
+    { "label": "Dino Game", "path": "/games/DinoGame/", "icon": "🦖" }
   ],
   "apps": [
-    {
-      "label": "Photos",
-      "path": "/photos",
-      "icon": "📷"
-    }
+    { "label": "PerminiGPT", "path": "https://perminigpt.vercel.app/", "icon": "🤖" }
+  ],
+  "web": [
+    { "label": "Google", "path": "https://www.google.com", "icon": "🔎" }
   ]
 }
 ````
 
-* `label` → Display name
-* `path` → URL or route
-* `icon` → Emoji (safe on Switch)
+* **label** → Display name
+* **path** → URL or local path
+* **icon** → Emoji (safe for Switch browser)
 
 ---
 
-## Controller Controls
+## 🎮 Controls
 
-### Home
+| Action | Input               |
+| ------ | ------------------- |
+| Move   | D-pad / Arrow keys  |
+| Select | A / Enter           |
+| Back   | B / Backspace / Esc |
+| Pin    | ⭐ button            |
+| Search | On-screen keyboard  |
 
-* Navigate tiles using **D-pad / Arrow keys**
-* **A / Enter** → Open
-* **B / Backspace / Esc** → Go back
-
-### Games / Apps
-
-* D-pad / Arrow keys → Move focus
-* **A / Enter** → Launch item
-* **⭐ Button** → Pin item
-* **B / Esc** → Return to Home
-
-> Gamepad API is used **best-effort**. Keyboard always works.
+(Gamepad support is best-effort via `navigator.getGamepads()`.)
 
 ---
 
-## Browser Compatibility
+## 🧠 Notes About the Switch Browser
 
-Optimized for:
-
-* Nintendo Switch browser
-* Captive portal / DNS-based browsers
-* WebKit-based environments
-
-### Storage Notes
-
-* `localStorage` is used **only for UI preferences & pins**
-* Persistence is **not guaranteed** on Switch
-* App works even if storage is cleared
+* Uses Nintendo’s hidden WebKit browser
+* No extensions
+* `localStorage` may clear unexpectedly
+* Emoji icons are safest (no SVGs)
+* Heavy JS/video sites may not work
 
 ---
 
-## Design Goals
+## 🚀 Usage
 
-* No frameworks
-* No heavy JS
-* No external dependencies
-* Fast load on Switch hardware
-* Safe CSS effects only (blur, glow, gradients)
-
----
-
-## Roadmap / Ideas
-
-* Editable bookmarks via JSON
-* Favorites on Home screen
-* Image icons per app
-* Sound effects (Switch-safe)
-* Kiosk / lock mode
-* Search across Games + Apps from Home
+1. Set your Switch DNS to **SwitchBru**
+2. Open the internet test page
+3. Load your hosted launcher
+4. Bookmark it
+5. Enjoy a console-style web launcher 🎉
 
 ---
 
-## Credits
+## 🔮 Planned Ideas
 
-Built for the **SwitchBru** community
-Designed for Nintendo Switch browser limitations
+* Auto-pin favorite apps
+* Theme presets (OLED / Neon / Dark)
+* Animated wallpapers with fallback
+* Export / import settings
+* Offline cached pages
 
 ---
 
-## License
-GNU GENERAL PUBLIC LICENSE (https://raw.githubusercontent.com/AbiramiSBN/SwitchBru-2/refs/heads/main/LICENSE)
+## 📜 License
+
+This project is experimental and for educational / personal use only.
+Nintendo Switch is a trademark of Nintendo.
+- Generate a **docs/** folder with usage guides
+```
