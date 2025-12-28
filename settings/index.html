@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SwitchBru • Settings</title>
+
+  <style>
+    :root{
+      --text:#eaf0ff;
+      --muted: rgba(234,240,255,0.75);
+      --card: rgba(0,0,0,0.60);
+      --border: rgba(255,255,255,0.18);
+      --blue: #3b82f6;
+      --blue2: #2563eb;
+      --radius: 18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family: system-ui, Arial, sans-serif;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.82)),
+        url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
+      padding: 22px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+    }
+    .panel{
+      width:min(980px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      backdrop-filter: blur(6px);
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom: 14px;
+    }
+    h1{ margin:0; font-size: 30px; }
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; }
+    button{
+      border:none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      cursor:pointer;
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+    button.primary{
+      background: var(--blue);
+      border-color: rgba(255,255,255,0.20);
+    }
+    button.primary:hover{ background: var(--blue2); }
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    @media (min-width: 760px){
+      .grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .card{
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    label{
+      display:block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    select, input[type="text"]{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.25);
+      color: var(--text);
+      outline: none;
+    }
+    .toggleRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(234,240,255,0.6);
+    }
+    .status{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.22);
+      color: rgba(234,240,255,0.85);
+      font-size: 13px;
+      display:none;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="panel">
+    <div class="top">
+      <h1>Settings</h1>
+      <div class="btnRow">
+        <button onclick="location.href='/'">← Home</button>
+        <button class="primary" onclick="save()">Save</button>
+        <button onclick="resetAll()">Reset</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Theme</h2>
+        <label for="theme">Tile theme</label>
+        <select id="theme">
+          <option value="dark">Dark (default vibe)</option>
+          <option value="light">Light (glass)</option>
+          <option value="neon">Neon (cyan glow)</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h2>Layout</h2>
+        <label for="tileSize">Home tile size</label>
+        <select id="tileSize">
+          <option value="normal">Normal</option>
+          <option value="small">Small</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h2>Title</h2>
+        <div class="toggleRow">
+          <div>
+            <div style="font-weight:700;">Title glow bloom</div>
+            <div style="font-size:12px; color: rgba(234,240,255,0.65);">Makes the title glow like the Seraph screen</div>
+          </div>
+          <input id="titleGlow" type="checkbox" />
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Version text</h2>
+        <label for="versionText">Shown under the title</label>
+        <input id="versionText" type="text" placeholder="version 10" />
+      </div>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="hint">
+      These settings save in your browser (localStorage). Hit Home to see changes.
+    </div>
+  </main>
+
+  <script>
+    const KEY = "sb_settings";
+    const statusEl = document.getElementById("status");
+
+    function showStatus(msg){
+      statusEl.textContent = msg;
+      statusEl.style.display = "block";
+      setTimeout(() => statusEl.style.display = "none", 2500);
+    }
+
+    function load(){
+      let s = null;
+      try { s = JSON.parse(localStorage.getItem(KEY) || "null"); } catch {}
+      s = s || {
+        theme: "dark",
+        tileSize: "normal",
+        titleGlow: true,
+        versionText: "version 10"
+      };
+
+      document.getElementById("theme").value = s.theme || "dark";
+      document.getElementById("tileSize").value = s.tileSize || "normal";
+      document.getElementById("titleGlow").checked = !!s.titleGlow;
+      document.getElementById("versionText").value = s.versionText || "version 10";
+    }
+
+    function save(){
+      const s = {
+        theme: document.getElementById("theme").value,
+        tileSize: document.getElementById("tileSize").value,
+        titleGlow: document.getElementById("titleGlow").checked,
+        versionText: document.getElementById("versionText").value
+      };
+      localStorage.setItem(KEY, JSON.stringify(s));
+      showStatus("Saved ✅ Go Home to see it.");
+    }
+
+    function resetAll(){
+      localStorage.removeItem(KEY);
+      load();
+      showStatus("Reset to defaults ✅");
+    }
+
+    load();
+  </script>
+</body>
+</html>
+
