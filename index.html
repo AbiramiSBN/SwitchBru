@@ -23,6 +23,12 @@
 
       /* Title glow toggle */
       --titleGlow: 1;
+
+      /* Search bar */
+      --chipBg: rgba(0,0,0,0.35);
+      --chipBorder: rgba(255,255,255,0.18);
+      --chipHover: rgba(255,255,255,0.12);
+      --accent: rgba(120,160,255,0.85);
     }
 
     * { box-sizing: border-box; }
@@ -47,7 +53,91 @@
       text-align:center;
     }
 
-    /* Title with glow bloom */
+    /* --- Search bar row --- */
+    .topbar{
+      width: min(860px, 100%);
+      margin: 0 auto 10px;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap: wrap;
+    }
+
+    .searchWrap{
+      flex: 1 1 520px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--chipBorder);
+      background: var(--chipBg);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.35);
+    }
+
+    .searchIcon{
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display:grid;
+      place-items:center;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      user-select:none;
+    }
+
+    .searchInput{
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #fff;
+      font-size: 16px;
+      padding: 6px 2px;
+      min-width: 200px;
+    }
+    .searchInput::placeholder{
+      color: rgba(255,255,255,0.70);
+    }
+
+    .goBtn{
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.10);
+      color: #fff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+      user-select:none;
+    }
+    .goBtn:hover{
+      background: var(--chipHover);
+      transform: translateY(-1px);
+    }
+
+    .googleChip{
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(0,0,0,0.28);
+      color: rgba(255,255,255,0.92);
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 13px;
+      display:flex;
+      gap: 8px;
+      align-items:center;
+      user-select:none;
+    }
+    .dot{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(120,160,255,0.8);
+    }
+
+    /* --- Title with glow bloom --- */
     .titleWrap{
       position: relative;
       display: inline-block;
@@ -127,7 +217,6 @@
       pointer-events:none;
     }
 
-    /* ICONS ON HOME */
     .tileIcon{
       position: relative;
       z-index: 1;
@@ -161,6 +250,28 @@
 
 <body>
   <main class="screen">
+
+    <!-- Search / URL bar -->
+    <div class="topbar">
+      <div class="searchWrap">
+        <div class="searchIcon">🔎</div>
+        <input
+          id="omnibox"
+          class="searchInput"
+          type="text"
+          inputmode="url"
+          autocomplete="off"
+          placeholder="Type a URL (youtube.com) or search (mario kart tips)…"
+        />
+        <button class="goBtn" id="goBtn">Go</button>
+      </div>
+
+      <div class="googleChip" title="Search engine: Google">
+        <span class="dot"></span>
+        <span>Google search</span>
+      </div>
+    </div>
+
     <div class="titleWrap">
       <h1 class="title">SwitchBru Applications</h1>
     </div>
@@ -184,5 +295,56 @@
       </button>
     </div>
   </main>
+
+  <script>
+    const box = document.getElementById("omnibox");
+    const goBtn = document.getElementById("goBtn");
+
+    function looksLikeUrl(text) {
+      const t = text.trim();
+      if (!t) return false;
+
+      // If it has a scheme, it's a URL
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return true;
+
+      // If it contains spaces, treat as search
+      if (/\s/.test(t)) return false;
+
+      // If it looks like a domain or localhost/IP
+      if (t.includes(".") || t === "localhost" || /^\d{1,3}(\.\d{1,3}){3}$/.test(t)) return true;
+
+      return false;
+    }
+
+    function toUrl(text) {
+      const t = text.trim();
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return t;
+      return "https://" + t;
+    }
+
+    function googleSearch(text) {
+      const q = encodeURIComponent(text.trim());
+      return "https://www.google.com/search?q=" + q;
+    }
+
+    function go() {
+      const value = box.value.trim();
+      if (!value) return;
+
+      const target = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
+      location.href = target;
+    }
+
+    goBtn.addEventListener("click", go);
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        go();
+      }
+    });
+
+    // Optional: focus the search box on load (nice on Switch)
+    // box.focus();
+  </script>
 </body>
 </html>
