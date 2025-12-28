@@ -7,24 +7,19 @@
 
   <style>
     :root{
-      /* FORCE WHITE TEXT */
       --text:#ffffff;
       --muted: rgba(255,255,255,0.85);
 
-      /* Tile visuals */
       --tileBg: rgba(56, 76, 160, 0.55);
       --tileBorder: rgba(255,255,255,0.18);
       --tileShadow: 0 18px 40px rgba(0,0,0,0.55);
       --tileRadius: 22px;
 
-      /* Tile size */
       --tileW: 190px;
       --tileH: 160px;
 
-      /* Title glow toggle */
       --titleGlow: 1;
 
-      /* Search bar */
       --chipBg: rgba(0,0,0,0.35);
       --chipBorder: rgba(255,255,255,0.18);
       --chipHover: rgba(255,255,255,0.12);
@@ -53,7 +48,7 @@
       text-align:center;
     }
 
-    /* --- Search bar row --- */
+    /* Top search + bookmarks */
     .topbar{
       width: min(860px, 100%);
       margin: 0 auto 10px;
@@ -85,7 +80,6 @@
       place-items:center;
       background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.14);
-      user-select:none;
     }
 
     .searchInput{
@@ -96,8 +90,8 @@
       color: #fff;
       font-size: 16px;
       padding: 6px 2px;
-      min-width: 200px;
     }
+
     .searchInput::placeholder{
       color: rgba(255,255,255,0.70);
     }
@@ -109,26 +103,28 @@
       border-radius: 14px;
       padding: 10px 14px;
       cursor: pointer;
-      transition: background 0.15s ease, transform 0.15s ease;
-      user-select:none;
-    }
-    .goBtn:hover{
-      background: var(--chipHover);
-      transform: translateY(-1px);
     }
 
-    .googleChip{
+    .chip{
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(0,0,0,0.28);
       color: rgba(255,255,255,0.92);
       border-radius: 999px;
-      padding: 10px 12px;
+      padding: 10px 14px;
       font-size: 13px;
       display:flex;
       gap: 8px;
       align-items:center;
+      cursor: pointer;
       user-select:none;
+      transition: background 0.15s ease, transform 0.15s ease;
     }
+
+    .chip:hover{
+      background: var(--chipHover);
+      transform: translateY(-1px);
+    }
+
     .dot{
       width: 8px;
       height: 8px;
@@ -137,7 +133,7 @@
       box-shadow: 0 0 14px rgba(120,160,255,0.8);
     }
 
-    /* --- Title with glow bloom --- */
+    /* Title */
     .titleWrap{
       position: relative;
       display: inline-block;
@@ -145,14 +141,13 @@
     }
 
     .titleWrap::before{
-      content: "SwitchBru Applications";
+      content: "SwitchBru Launcher";
       position: absolute;
       inset: 0;
       color: rgba(255,255,255,0.85);
       filter: blur(16px);
       opacity: calc(0.9 * var(--titleGlow));
       z-index: 0;
-      pointer-events: none;
     }
 
     .title{
@@ -190,36 +185,20 @@
       background: var(--tileBg);
       box-shadow: var(--tileShadow);
       cursor: pointer;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-      position: relative;
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-      padding: 14px 16px;
+      transition: transform 0.15s ease, background 0.15s ease;
       display:flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
+      padding: 14px 16px;
     }
 
     .tile:hover{
       transform: translateY(-3px);
       background: rgba(70, 96, 190, 0.60);
-      border-color: rgba(255,255,255,0.28);
-    }
-
-    .tile::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(120px 90px at 35% 25%, rgba(255,255,255,0.12), transparent 65%),
-        linear-gradient(transparent, rgba(0,0,0,0.25));
-      pointer-events:none;
     }
 
     .tileIcon{
-      position: relative;
-      z-index: 1;
       width: 64px;
       height: 64px;
       border-radius: 18px;
@@ -228,22 +207,14 @@
       font-size: 34px;
       background: rgba(0,0,0,0.25);
       border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.35);
-      margin-top: 6px;
-      user-select: none;
-      color: #ffffff;
+      color: #fff;
     }
 
     .tileLabel{
-      position: relative;
-      z-index: 1;
       font-size: 20px;
       font-weight: 700;
-      letter-spacing: 0.2px;
       text-transform: lowercase;
-      padding-bottom: 4px;
-      color: #ffffff;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+      color: #fff;
     }
   </style>
 </head>
@@ -251,7 +222,7 @@
 <body>
   <main class="screen">
 
-    <!-- Search / URL bar -->
+    <!-- Search + Bookmarks -->
     <div class="topbar">
       <div class="searchWrap">
         <div class="searchIcon">🔎</div>
@@ -259,17 +230,19 @@
           id="omnibox"
           class="searchInput"
           type="text"
-          inputmode="url"
-          autocomplete="off"
-          placeholder="Type a URL (youtube.com) or search (mario kart tips)…"
+          placeholder="Type a URL or search…"
         />
         <button class="goBtn" id="goBtn">Go</button>
       </div>
 
-      <div class="googleChip" title="Search engine: Google">
+      <button class="chip" onclick="location.href='https://www.google.com/'" title="Google">
         <span class="dot"></span>
-        <span>Google search</span>
-      </div>
+        <span>Google</span>
+      </button>
+
+      <button class="chip" onclick="location.href='https://dns.switchbru.com/'" title="Old SwitchBru Dashboard">
+        🧭 SwitchBru DNS
+      </button>
     </div>
 
     <div class="titleWrap">
@@ -279,17 +252,17 @@
     <div class="version">version 10</div>
 
     <div class="tiles">
-      <button class="tile" onclick="location.href='/games/'" aria-label="Games">
+      <button class="tile" onclick="location.href='/games/'">
         <div class="tileIcon">🎮</div>
         <div class="tileLabel">games</div>
       </button>
 
-      <button class="tile" onclick="location.href='/apps/'" aria-label="Apps">
+      <button class="tile" onclick="location.href='/apps/'">
         <div class="tileIcon">🧩</div>
         <div class="tileLabel">apps</div>
       </button>
 
-      <button class="tile" onclick="location.href='/settings/'" aria-label="Settings">
+      <button class="tile" onclick="location.href='/settings/'">
         <div class="tileIcon">⚙️</div>
         <div class="tileLabel">settings</div>
       </button>
@@ -300,51 +273,25 @@
     const box = document.getElementById("omnibox");
     const goBtn = document.getElementById("goBtn");
 
-    function looksLikeUrl(text) {
-      const t = text.trim();
-      if (!t) return false;
-
-      // If it has a scheme, it's a URL
-      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return true;
-
-      // If it contains spaces, treat as search
-      if (/\s/.test(t)) return false;
-
-      // If it looks like a domain or localhost/IP
-      if (t.includes(".") || t === "localhost" || /^\d{1,3}(\.\d{1,3}){3}$/.test(t)) return true;
-
-      return false;
+    function looksLikeUrl(text){
+      if (/\s/.test(text)) return false;
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(text)) return true;
+      return text.includes(".");
     }
 
-    function toUrl(text) {
-      const t = text.trim();
-      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return t;
-      return "https://" + t;
+    function go(){
+      const v = box.value.trim();
+      if (!v) return;
+      const url = looksLikeUrl(v)
+        ? (v.startsWith("http") ? v : "https://" + v)
+        : "https://www.google.com/search?q=" + encodeURIComponent(v);
+      location.href = url;
     }
 
-    function googleSearch(text) {
-      const q = encodeURIComponent(text.trim());
-      return "https://www.google.com/search?q=" + q;
-    }
-
-    function go() {
-      const value = box.value.trim();
-      if (!value) return;
-
-      const target = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
-      location.href = target;
-    }
-
-    goBtn.addEventListener("click", go);
-    box.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        go();
-      }
+    goBtn.onclick = go;
+    box.addEventListener("keydown", e => {
+      if (e.key === "Enter") go();
     });
-
-    // Optional: focus the search box on load (nice on Switch)
-    // box.focus();
   </script>
 </body>
 </html>
