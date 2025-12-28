@@ -180,4 +180,4 @@ Designed for Nintendo Switch browser limitations
 ---
 
 ## License
-GNU GENERAL PUBLIC LICENSE ()
+GNU GENERAL PUBLIC LICENSE (https://raw.githubusercontent.com/AbiramiSBN/SwitchBru-2/refs/heads/main/LICENSE)
