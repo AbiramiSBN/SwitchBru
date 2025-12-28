@@ -24,6 +24,7 @@
     { "label": "Game 9", "path": "/games/game9", "icon": "🎮" }
   ],
   "apps": [
+    { "label": "PerminiGPT", "path": "https://perminigpt.vercel.app/", "icon": "🤖" },
     { "label": "App 1", "path": "/app1", "icon": "📱" },
     { "label": "App 2", "path": "/app2", "icon": "📱" },
     { "label": "App 3", "path": "/app3", "icon": "📱" },
@@ -55,6 +56,11 @@
       "label": "SwitchBru DNS",
       "path": "https://dns.switchbru.com/",
       "icon": "🧭"
+    },
+    {
+      "label": "SwitchBru Games Hub",
+      "path": "https://switchbru2.vercel.app/apps/switchgames/",
+      "icon": "🎮"
     },
     {
       "label": "FBI Bears",
