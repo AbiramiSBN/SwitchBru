@@ -52,9 +52,29 @@
       "icon": "📚"
     },
     {
-      "label": "SwitchBru DNS Dashboard",
+      "label": "SwitchBru DNS",
       "path": "https://dns.switchbru.com/",
       "icon": "🧭"
+    },
+    {
+      "label": "FBI Bears",
+      "path": "https://fbi.bears.codes/",
+      "icon": "🐻"
+    },
+    {
+      "label": "Science Victory Labs",
+      "path": "https://labs.sciencevictory.com/",
+      "icon": "🧪"
+    },
+    {
+      "label": "Moldeo Dashboard",
+      "path": "https://dash.moldeo.org/",
+      "icon": "📊"
+    },
+    {
+      "label": "Moldeo App",
+      "path": "https://app.moldeo.org/",
+      "icon": "🧩"
     }
   ]
 }
