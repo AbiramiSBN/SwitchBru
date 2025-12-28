@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>SwitchBru Applications</title>
+
+        <style>
+            :root {
+                --text: #eaf0ff;
+                --muted: rgba(234, 240, 255, 0.75);
+
+                /* Theme defaults (can be overridden by settings) */
+                --tileBg: rgba(56, 76, 160, 0.55);
+                --tileBorder: rgba(255, 255, 255, 0.18);
+                --tileShadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+                --tileRadius: 22px;
+
+                --tileW: 190px;
+                --tileH: 160px;
+
+                --titleGlow: 1; /* 0 or 1 */
+                --versionText: "version 10";
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                font-family:
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                color: var(--text);
+                background:
+                    radial-gradient(
+                        900px 520px at 52% 28%,
+                        rgba(120, 160, 255, 0.24),
+                        transparent 62%
+                    ),
+                    linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.78)),
+                    url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 24px;
+            }
+
+            .screen {
+                width: min(980px, 100%);
+                text-align: center;
+            }
+
+            /* Title bloom like the screenshot, toggled via --titleGlow */
+            .titleWrap {
+                position: relative;
+                display: inline-block;
+                margin-top: 6px;
+            }
+            .titleWrap::before {
+                content: "SwitchBru Applications";
+                position: absolute;
+                inset: 0;
+                color: rgba(170, 205, 255, 0.85);
+                filter: blur(14px);
+                opacity: calc(0.85 * var(--titleGlow));
+                z-index: 0;
+                pointer-events: none;
+            }
+            .title {
+                position: relative;
+                z-index: 1;
+                font-size: clamp(52px, 8vw, 104px);
+                letter-spacing: 1px;
+                margin: 0;
+                font-weight: 800;
+                text-shadow:
+                    0 0 22px rgba(140, 180, 255, 0.42),
+                    0 0 44px rgba(90, 140, 255, 0.22);
+            }
+
+            .version {
+                margin-top: 10px;
+                font-size: 18px;
+                color: var(--muted);
+            }
+
+            .tiles {
+                margin-top: 30px;
+                display: flex;
+                justify-content: center;
+                gap: 22px;
+                flex-wrap: wrap;
+            }
+
+            .tile {
+                width: var(--tileW);
+                height: var(--tileH);
+                border-radius: var(--tileRadius);
+                border: 1px solid var(--tileBorder);
+                background: var(--tileBg);
+                box-shadow: var(--tileShadow);
+                cursor: pointer;
+                transition:
+                    transform 0.15s ease,
+                    background 0.15s ease,
+                    border-color 0.15s ease;
+                position: relative;
+                overflow: hidden;
+                backdrop-filter: blur(8px);
+                padding: 14px 16px 14px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .tile:hover {
+                transform: translateY(-3px);
+                background: rgba(70, 96, 190, 0.6);
+                border-color: rgba(255, 255, 255, 0.24);
+            }
+
+            .tile::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background:
+                    radial-gradient(
+                        120px 90px at 35% 25%,
+                        rgba(255, 255, 255, 0.1),
+                        transparent 65%
+                    ),
+                    linear-gradient(transparent, rgba(0, 0, 0, 0.2));
+                pointer-events: none;
+            }
+
+            /* New: icon area on top */
+            .tileIcon {
+                position: relative;
+                z-index: 1;
+                width: 64px;
+                height: 64px;
+                border-radius: 18px;
+                display: grid;
+                place-items: center;
+                font-size: 34px;
+                background: rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+                margin-top: 6px;
+                user-select: none;
+            }
+
+            .tileLabel {
+                position: relative;
+                z-index: 1;
+                font-size: 20px;
+                font-weight: 700;
+                letter-spacing: 0.2px;
+                text-transform: lowercase;
+                padding-bottom: 4px;
+                text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+            }
+        </style>
+    </head>
+
+    <body>
+        <main class="screen">
+            <div class="titleWrap">
+                <h1 class="title">SwitchBru Applications</h1>
+            </div>
+            <div class="version" id="versionText">version 10</div>
+
+            <div class="tiles">
+                <button
+                    class="tile"
+                    onclick="location.href='/games/'"
+                    aria-label="Games"
+                >
+                    <div class="tileIcon">🎮</div>
+                    <div class="tileLabel">games</div>
+                </button>
+
+                <button
+                    class="tile"
+                    onclick="location.href='/apps/'"
+                    aria-label="Apps"
+                >
+                    <div class="tileIcon">🧩</div>
+                    <div class="tileLabel">apps</div>
+                </button>
+
+                <button
+                    class="tile"
+                    onclick="location.href='/settings/'"
+                    aria-label="Settings"
+                >
+                    <div class="tileIcon">⚙️</div>
+                    <div class="tileLabel">settings</div>
+                </button>
+            </div>
+        </main>
+
+        <script>
+            // Read saved settings (set by /settings/)
+            function applySettings() {
+                let s = null;
+                try {
+                    s = JSON.parse(
+                        localStorage.getItem("sb_settings") || "null",
+                    );
+                } catch {}
+                if (!s) return;
+
+                const root = document.documentElement;
+
+                // Theme
+                if (s.theme === "dark") {
+                    root.style.setProperty(
+                        "--tileBg",
+                        "rgba(56, 76, 160, 0.55)",
+                    );
+                } else if (s.theme === "light") {
+                    root.style.setProperty(
+                        "--tileBg",
+                        "rgba(255, 255, 255, 0.22)",
+                    );
+                } else if (s.theme === "neon") {
+                    root.style.setProperty(
+                        "--tileBg",
+                        "rgba(40, 200, 255, 0.22)",
+                    );
+                }
+
+                // Tile size
+                if (s.tileSize === "small") {
+                    root.style.setProperty("--tileW", "170px");
+                    root.style.setProperty("--tileH", "145px");
+                } else if (s.tileSize === "large") {
+                    root.style.setProperty("--tileW", "220px");
+                    root.style.setProperty("--tileH", "175px");
+                } else {
+                    root.style.setProperty("--tileW", "190px");
+                    root.style.setProperty("--tileH", "160px");
+                }
+
+                // Title glow
+                root.style.setProperty("--titleGlow", s.titleGlow ? "1" : "0");
+
+                // Version text
+                if (typeof s.versionText === "string" && s.versionText.trim()) {
+                    document.getElementById("versionText").textContent =
+                        s.versionText.trim();
+                }
+            }
+
+            applySettings();
+        </script>
+    </body>
+</html>
