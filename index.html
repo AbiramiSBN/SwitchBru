@@ -1,323 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SwitchBru Applications</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SwitchBru Launcher</title>
 
-  <style>
-    :root {
-      --text: #ffffff;
-      --titleColor: #ffffff;
-      --tileLabelColor: #ffffff;
-      --buttonTextColor: #ffffff;
-      --wallpaper: url("/assets/wallpaper.jpeg");
-      --muted: rgba(255,255,255,0.85);
+<style>
+:root{
+  --text:#fff;
+  --titleColor:#fff;
+  --tileLabelColor:#fff;
+  --buttonTextColor:#fff;
+  --wallpaper:url("/assets/wallpaper.jpeg");
+  --titleGlow:1;
+  --tileW:190px;
+  --tileH:160px;
+}
 
-      --tileBg: rgba(56,76,160,0.55);
-      --tileBorder: rgba(255,255,255,0.18);
-      --tileShadow: 0 18px 40px rgba(0,0,0,0.55);
-      --tileRadius: 22px;
+*{box-sizing:border-box}
 
-      --tileW: 190px;
-      --tileH: 160px;
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:system-ui,Arial,sans-serif;
+  color:var(--text);
+  background:
+    linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.82)),
+    var(--wallpaper) center/cover no-repeat fixed;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:24px;
+}
 
-      --titleGlow: 1;
-      --chipBg: rgba(0,0,0,0.35);
-      --chipBorder: rgba(255,255,255,0.18);
-      --chipHover: rgba(255,255,255,0.12);
-      --accent: rgba(120,160,255,0.85);
-    }
+.screen{width:min(980px,100%);text-align:center}
 
-    * { box-sizing: border-box; }
+.topbar{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:10px;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(900px 520px at 52% 28%, rgba(120,160,255,0.24), transparent 62%),
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.78)),
-        var(--wallpaper) center/cover no-repeat fixed;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+.search{
+  display:flex;
+  gap:10px;
+  padding:10px;
+  border-radius:16px;
+  background:rgba(0,0,0,.35);
+  border:1px solid rgba(255,255,255,.18);
+  width:min(560px,100%);
+}
 
-    .screen { width: min(980px,100%); text-align:center; }
+.search input{
+  flex:1;
+  background:none;
+  border:none;
+  outline:none;
+  color:var(--text);
+  font-size:16px;
+}
 
-    .topbar {
-      width: min(860px,100%);
-      margin: 0 auto 10px;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-      flex-wrap: wrap;
-    }
+.search button{
+  padding:8px 14px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.12);
+  color:var(--buttonTextColor);
+}
 
-    .searchWrap {
-      flex:1 1 520px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid var(--chipBorder);
-      background: var(--chipBg);
-      backdrop-filter:blur(6px);
-      box-shadow: 0 14px 28px rgba(0,0,0,0.35);
-    }
+.chip{
+  padding:10px 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.35);
+  color:var(--buttonTextColor);
+  cursor:pointer;
+}
 
-    .searchIcon {
-      width: 36px;
-      height: 36px;
-      border-radius: 12px;
-      display:grid;
-      place-items:center;
-      background: rgba(255,255,255,0.10);
-      border:1px solid rgba(255,255,255,0.14);
-      user-select:none;
-      color: var(--buttonTextColor);
-    }
+.titleWrap{
+  position:relative;
+  display:inline-block;
+}
 
-    .searchInput {
-      flex:1;
-      border:none;
-      outline:none;
-      background:transparent;
-      color: var(--text);
-      font-size:16px;
-      padding:6px 2px;
-      min-width:200px;
-    }
-    .searchInput::placeholder { color: rgba(255,255,255,0.70); }
+.titleWrap::before{
+  content:"SwitchBru Launcher";
+  position:absolute;
+  inset:0;
+  filter:blur(18px);
+  opacity:calc(.9 * var(--titleGlow));
+  color:var(--titleColor);
+}
 
-    .goBtn {
-      border:1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.10);
-      color: var(--buttonTextColor);
-      border-radius:14px;
-      padding:10px 14px;
-      cursor:pointer;
-      transition: background 0.15s ease, transform 0.15s ease;
-    }
-    .goBtn:hover {
-      background: var(--chipHover);
-      transform: translateY(-1px);
-    }
+h1{
+  font-size:clamp(52px,8vw,104px);
+  margin:0;
+  font-weight:800;
+  color:var(--titleColor);
+}
 
-    .chip {
-      border:1px solid rgba(255,255,255,0.16);
-      background:rgba(0,0,0,0.28);
-      color:var(--buttonTextColor);
-      border-radius:999px;
-      padding:10px 14px;
-      font-size:13px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      cursor:pointer;
-      user-select:none;
-      transition:background 0.15s ease,transform 0.15s ease;
-    }
-    .chip:hover {
-      background: var(--chipHover);
-      transform:translateY(-1px);
-    }
-    .dot {
-      width:8px;height:8px;border-radius:999px;
-      background:var(--accent);
-      box-shadow: 0 0 14px rgba(120,160,255,0.8);
-    }
+.version{
+  margin-top:10px;
+  opacity:.8;
+}
 
-    .titleWrap {
-      position:relative;
-      display:inline-block;
-      margin-top:6px;
-    }
+.tiles{
+  margin-top:30px;
+  display:flex;
+  gap:22px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
 
-    .titleWrap::before {
-      content:"SwitchBru Applications";
-      position:absolute;
-      inset:0;
-      color:var(--titleColor);
-      filter:blur(16px);
-      opacity:calc(0.9 * var(--titleGlow));
-      z-index:0;
-    }
+.tile{
+  width:var(--tileW);
+  height:var(--tileH);
+  border-radius:22px;
+  background:rgba(70,90,190,.55);
+  border:1px solid rgba(255,255,255,.18);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px;
+  cursor:pointer;
+}
 
-    .title {
-      position:relative;
-      z-index:1;
-      font-size:clamp(52px,8vw,104px);
-      letter-spacing:1px;
-      margin:0;
-      font-weight:800;
-      color:var(--titleColor);
-    }
+.tile div:first-child{
+  font-size:34px;
+}
 
-    .version {
-      margin-top:10px;
-      font-size:18px;
-      color:var(--muted);
-    }
-
-    .tiles {
-      margin-top:30px;
-      display:flex;
-      justify-content:center;
-      gap:22px;
-      flex-wrap:wrap;
-    }
-
-    .tile{
-      width:var(--tileW);
-      height:var(--tileH);
-      border-radius:var(--tileRadius);
-      border:1px solid var(--tileBorder);
-      background:var(--tileBg);
-      box-shadow:var(--tileShadow);
-      cursor:pointer;
-      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      align-items:center;
-      padding:14px 16px;
-    }
-
-    .tile:hover {
-      transform:translateY(-3px);
-      background:rgba(70,96,190,0.60);
-      border-color:rgba(255,255,255,0.28);
-    }
-
-    .tileIcon {
-      width:64px;
-      height:64px;
-      border-radius:18px;
-      display:grid;
-      place-items:center;
-      font-size:34px;
-      background:rgba(0,0,0,0.25);
-      border:1px solid rgba(255,255,255,0.18);
-      color:var(--buttonTextColor);
-    }
-
-    .tileLabel {
-      font-size:20px;
-      font-weight:700;
-      text-transform:lowercase;
-      color:var(--tileLabelColor);
-    }
-  </style>
+.tileLabel{
+  font-size:20px;
+  font-weight:700;
+  color:var(--tileLabelColor);
+}
+</style>
 </head>
 
 <body>
-  <main class="screen">
+<div class="screen">
 
-    <div class="topbar">
-      <div class="searchWrap">
-        <div class="searchIcon">🔎</div>
-        <input id="omnibox" class="searchInput" type="text" placeholder="Search or URL…" />
-        <button class="goBtn" id="goBtn">Go</button>
-      </div>
-
-      <button class="chip" onclick="location.href='https://www.google.com/'">
-        <span class="dot"></span><span>Google</span>
-      </button>
-      <button class="chip" onclick="location.href='https://dns.switchbru.com/'">
-        🧭 SwitchBru DNS
-      </button>
+  <div class="topbar">
+    <div class="search">
+      <input id="q" placeholder="URL or search…">
+      <button onclick="go()">Go</button>
     </div>
 
-    <div class="titleWrap"><h1 class="title">SwitchBru Applications</h1></div>
-    <div class="version" id="versionText">version 10</div>
+    <button class="chip" onclick="location.href='https://www.google.com'">🔎 Google</button>
+    <button class="chip" onclick="location.href='https://dns.switchbru.com/'">🧭 SwitchBru DNS</button>
 
-    <div class="tiles">
-      <button class="tile" onclick="location.href='/games/'">
-        <div class="tileIcon">🎮</div><div class="tileLabel">Games</div>
-      </button>
-      <button class="tile" onclick="location.href='/apps/'">
-        <div class="tileIcon">🧩</div><div class="tileLabel">Apps</div>
-      </button>
-      <button class="tile" onclick="location.href='/web/'">
-        <div class="tileIcon">🌐</div><div class="tileLabel">Web</div>
-      </button>
-      <button class="tile" onclick="location.href='/settings/'">
-        <div class="tileIcon">⚙️</div><div class="tileLabel">Settings</div>
-      </button>
+    <!-- HARD-CODED BOOKMARK -->
+    <button class="chip"
+      onclick="location.href='https://switchbru2.vercel.app/apps/switchgames/'">
+      🎮 SwitchBru Games
+    </button>
+  </div>
+
+  <div class="titleWrap">
+    <h1>SwitchBru Launcher</h1>
+  </div>
+
+  <div class="version" id="ver">version 10</div>
+
+  <div class="tiles">
+    <div class="tile" onclick="location.href='/games/'">
+      <div>🎮</div><div class="tileLabel">games</div>
     </div>
-  </main>
+    <div class="tile" onclick="location.href='/apps/'">
+      <div>🧩</div><div class="tileLabel">apps</div>
+    </div>
+    <div class="tile" onclick="location.href='/web/'">
+      <div>🌐</div><div class="tileLabel">web</div>
+    </div>
+    <div class="tile" onclick="location.href='/settings/'">
+      <div>⚙️</div><div class="tileLabel">settings</div>
+    </div>
+  </div>
+</div>
 
-  <script>
-    (function applySettings() {
-      try {
-        const s = JSON.parse(localStorage.getItem("sb_settings") || "null");
-        if (!s) return;
-        const root = document.documentElement;
+<script>
+function go(){
+  const v=q.value.trim();
+  if(!v) return;
+  location.href = v.includes(" ") ?
+    "https://www.google.com/search?q="+encodeURIComponent(v) :
+    (v.startsWith("http")?v:"https://"+v);
+}
 
-        if (s.wallpaperUrl && /^https?:\/\//i.test(s.wallpaperUrl)) {
-          root.style.setProperty("--wallpaper", `url("${s.wallpaperUrl}")`);
-        } else if (s.wallpaperPreset) {
-          root.style.setProperty("--wallpaper", `url("${s.wallpaperPreset}")`);
-        }
-
-        if (s.text) root.style.setProperty("--text", s.text);
-        if (s.title) root.style.setProperty("--titleColor", s.title);
-        if (s.tile) root.style.setProperty("--tileLabelColor", s.tile);
-        if (s.button) root.style.setProperty("--buttonTextColor", s.button);
-
-        root.style.setProperty("--titleGlow", s.glow ? "1" : "0");
-
-        if (s.tileSize === "small") {
-          root.style.setProperty("--tileW", "170px");
-          root.style.setProperty("--tileH", "145px");
-        } else if (s.tileSize === "large") {
-          root.style.setProperty("--tileW", "220px");
-          root.style.setProperty("--tileH", "175px");
-        }
-
-        if (typeof s.version === "string" && s.version.trim()) {
-          document.getElementById("versionText").textContent = s.version.trim();
-        }
-      } catch {}
-    })();
-
-    const box = document.getElementById("omnibox");
-    const goBtn = document.getElementById("goBtn");
-
-    function looksLikeUrl(text) {
-      const t = text.trim();
-      if (!t) return false;
-      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return true;
-      if (/\s/.test(t)) return false;
-      return t.includes(".");
-    }
-
-    function toUrl(text) {
-      const t = text.trim();
-      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return t;
-      return "https://" + t;
-    }
-
-    function googleSearch(text) {
-      return "https://www.google.com/search?q=" + encodeURIComponent(text.trim());
-    }
-
-    function go() {
-      const value = box.value.trim();
-      if (!value) return;
-      location.href = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
-    }
-
-    goBtn.addEventListener("click", go);
-    box.addEventListener("keydown", e => {
-      if (e.key === "Enter") go();  
-    });
-  </script>
+// apply settings
+try{
+  const s=JSON.parse(localStorage.getItem("sb_settings"));
+  if(s){
+    const r=document.documentElement;
+    if(s.wallpaperUrl) r.style.setProperty("--wallpaper",`url("${s.wallpaperUrl}")`);
+    else if(s.wallpaperPreset) r.style.setProperty("--wallpaper",`url("${s.wallpaperPreset}")`);
+    if(s.text) r.style.setProperty("--text",s.text);
+    if(s.title) r.style.setProperty("--titleColor",s.title);
+    if(s.tile) r.style.setProperty("--tileLabelColor",s.tile);
+    if(s.button) r.style.setProperty("--buttonTextColor",s.button);
+    r.style.setProperty("--titleGlow",s.glow?1:0);
+    if(s.version) ver.textContent=s.version;
+  }
+}catch{}
+</script>
 </body>
 </html>
