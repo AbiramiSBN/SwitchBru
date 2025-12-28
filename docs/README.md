@@ -1,8 +1,3 @@
-## 📁 1️⃣ `docs/README.md`
-
-Create a **`docs/` folder** and add this file inside it.
-
-```md
 # SwitchBru Launcher – Documentation
 
 This folder contains documentation for the **SwitchBru Launcher**, a custom web launcher designed to run on the Nintendo Switch hidden browser via SwitchBru DNS.
