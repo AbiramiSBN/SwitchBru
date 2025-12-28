@@ -7,7 +7,14 @@
 
   <style>
     :root{
+      /* Defaults (overridden by settings if present) */
       --text:#ffffff;
+      --titleColor:#ffffff;
+      --tileLabelColor:#ffffff;
+      --buttonTextColor:#ffffff;
+
+      --wallpaper: url("/assets/wallpaper.jpeg");
+
       --muted: rgba(255,255,255,0.85);
 
       --tileBg: rgba(56, 76, 160, 0.55);
@@ -26,7 +33,7 @@
       --accent: rgba(120,160,255,0.85);
     }
 
-    * { box-sizing: border-box; }
+    *{ box-sizing:border-box; }
 
     body{
       margin:0;
@@ -36,7 +43,7 @@
       background:
         radial-gradient(900px 520px at 52% 28%, rgba(120,160,255,0.24), transparent 62%),
         linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.78)),
-        url("/assets/wallpaper.jpeg") center/cover no-repeat fixed;
+        var(--wallpaper) center/cover no-repeat fixed;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -48,7 +55,7 @@
       text-align:center;
     }
 
-    /* Top search + bookmarks */
+    /* Topbar */
     .topbar{
       width: min(860px, 100%);
       margin: 0 auto 10px;
@@ -80,6 +87,8 @@
       place-items:center;
       background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.14);
+      user-select:none;
+      color: var(--buttonTextColor);
     }
 
     .searchInput{
@@ -87,28 +96,32 @@
       border: none;
       outline: none;
       background: transparent;
-      color: #fff;
+      color: var(--text);
       font-size: 16px;
       padding: 6px 2px;
+      min-width: 200px;
     }
-
-    .searchInput::placeholder{
-      color: rgba(255,255,255,0.70);
-    }
+    .searchInput::placeholder{ color: rgba(255,255,255,0.70); }
 
     .goBtn{
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.10);
-      color: #fff;
+      color: var(--buttonTextColor);
       border-radius: 14px;
       padding: 10px 14px;
       cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+      user-select:none;
+    }
+    .goBtn:hover{
+      background: var(--chipHover);
+      transform: translateY(-1px);
     }
 
     .chip{
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(0,0,0,0.28);
-      color: rgba(255,255,255,0.92);
+      color: var(--buttonTextColor);
       border-radius: 999px;
       padding: 10px 14px;
       font-size: 13px;
@@ -119,7 +132,6 @@
       user-select:none;
       transition: background 0.15s ease, transform 0.15s ease;
     }
-
     .chip:hover{
       background: var(--chipHover);
       transform: translateY(-1px);
@@ -133,7 +145,7 @@
       box-shadow: 0 0 14px rgba(120,160,255,0.8);
     }
 
-    /* Title */
+    /* Title bloom */
     .titleWrap{
       position: relative;
       display: inline-block;
@@ -141,13 +153,14 @@
     }
 
     .titleWrap::before{
-      content: "SwitchBru Launcher";
+      content: "SwitchBru Applications";
       position: absolute;
       inset: 0;
-      color: rgba(255,255,255,0.85);
+      color: var(--titleColor);
       filter: blur(16px);
       opacity: calc(0.9 * var(--titleGlow));
       z-index: 0;
+      pointer-events: none;
     }
 
     .title{
@@ -157,7 +170,7 @@
       letter-spacing: 1px;
       margin: 0;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--titleColor);
       text-shadow:
         0 0 24px rgba(255,255,255,0.35),
         0 0 48px rgba(120,160,255,0.25);
@@ -185,20 +198,36 @@
       background: var(--tileBg);
       box-shadow: var(--tileShadow);
       cursor: pointer;
-      transition: transform 0.15s ease, background 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+      position: relative;
+      overflow:hidden;
+      backdrop-filter: blur(8px);
+      padding: 14px 16px;
       display:flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 16px;
     }
 
     .tile:hover{
       transform: translateY(-3px);
       background: rgba(70, 96, 190, 0.60);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .tile::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(120px 90px at 35% 25%, rgba(255,255,255,0.12), transparent 65%),
+        linear-gradient(transparent, rgba(0,0,0,0.25));
+      pointer-events:none;
     }
 
     .tileIcon{
+      position: relative;
+      z-index: 1;
       width: 64px;
       height: 64px;
       border-radius: 18px;
@@ -207,22 +236,29 @@
       font-size: 34px;
       background: rgba(0,0,0,0.25);
       border: 1px solid rgba(255,255,255,0.18);
-      color: #fff;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+      margin-top: 6px;
+      user-select: none;
+      color: var(--buttonTextColor);
     }
 
     .tileLabel{
+      position: relative;
+      z-index: 1;
       font-size: 20px;
       font-weight: 700;
+      letter-spacing: 0.2px;
       text-transform: lowercase;
-      color: #fff;
+      padding-bottom: 4px;
+      color: var(--tileLabelColor);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.45);
     }
   </style>
 </head>
 
 <body>
   <main class="screen">
-
-    <!-- Search + Bookmarks -->
+    <!-- Search / URL + bookmarks -->
     <div class="topbar">
       <div class="searchWrap">
         <div class="searchIcon">🔎</div>
@@ -230,7 +266,9 @@
           id="omnibox"
           class="searchInput"
           type="text"
-          placeholder="Type a URL or search…"
+          inputmode="url"
+          autocomplete="off"
+          placeholder="Type a URL (youtube.com) or search (mario kart tips)…"
         />
         <button class="goBtn" id="goBtn">Go</button>
       </div>
@@ -249,20 +287,20 @@
       <h1 class="title">SwitchBru Applications</h1>
     </div>
 
-    <div class="version">version 10</div>
+    <div class="version" id="versionText">version 10</div>
 
     <div class="tiles">
-      <button class="tile" onclick="location.href='/games/'">
+      <button class="tile" onclick="location.href='/games/'" aria-label="Games">
         <div class="tileIcon">🎮</div>
         <div class="tileLabel">games</div>
       </button>
 
-      <button class="tile" onclick="location.href='/apps/'">
+      <button class="tile" onclick="location.href='/apps/'" aria-label="Apps">
         <div class="tileIcon">🧩</div>
         <div class="tileLabel">apps</div>
       </button>
 
-      <button class="tile" onclick="location.href='/settings/'">
+      <button class="tile" onclick="location.href='/settings/'" aria-label="Settings">
         <div class="tileIcon">⚙️</div>
         <div class="tileLabel">settings</div>
       </button>
@@ -270,27 +308,85 @@
   </main>
 
   <script>
+    // Apply settings from /settings/
+    (function applySettings(){
+      try{
+        const s = JSON.parse(localStorage.getItem("sb_settings") || "null");
+        if(!s) return;
+
+        const root = document.documentElement;
+
+        // Wallpaper
+        if (s.wallpaperUrl && /^https?:\/\//i.test(s.wallpaperUrl)) {
+          root.style.setProperty("--wallpaper", `url("${s.wallpaperUrl}")`);
+        } else if (s.wallpaperPreset) {
+          root.style.setProperty("--wallpaper", `url("${s.wallpaperPreset}")`);
+        }
+
+        // Colors
+        if (s.text) root.style.setProperty("--text", s.text);
+        if (s.title) root.style.setProperty("--titleColor", s.title);
+        if (s.tile) root.style.setProperty("--tileLabelColor", s.tile);
+        if (s.button) root.style.setProperty("--buttonTextColor", s.button);
+
+        // Glow
+        root.style.setProperty("--titleGlow", s.glow ? "1" : "0");
+
+        // Tile size
+        if (s.tileSize === "small") {
+          root.style.setProperty("--tileW", "170px");
+          root.style.setProperty("--tileH", "145px");
+        } else if (s.tileSize === "large") {
+          root.style.setProperty("--tileW", "220px");
+          root.style.setProperty("--tileH", "175px");
+        } else {
+          root.style.setProperty("--tileW", "190px");
+          root.style.setProperty("--tileH", "160px");
+        }
+
+        // Version text
+        if (typeof s.version === "string" && s.version.trim()) {
+          document.getElementById("versionText").textContent = s.version.trim();
+        }
+      } catch {}
+    })();
+
+    // Omnibox behavior (URL vs Google search)
     const box = document.getElementById("omnibox");
     const goBtn = document.getElementById("goBtn");
 
-    function looksLikeUrl(text){
-      if (/\s/.test(text)) return false;
-      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(text)) return true;
-      return text.includes(".");
+    function looksLikeUrl(text) {
+      const t = text.trim();
+      if (!t) return false;
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return true;
+      if (/\s/.test(t)) return false;
+      if (t.includes(".") || t === "localhost" || /^\d{1,3}(\.\d{1,3}){3}$/.test(t)) return true;
+      return false;
     }
 
-    function go(){
-      const v = box.value.trim();
-      if (!v) return;
-      const url = looksLikeUrl(v)
-        ? (v.startsWith("http") ? v : "https://" + v)
-        : "https://www.google.com/search?q=" + encodeURIComponent(v);
-      location.href = url;
+    function toUrl(text) {
+      const t = text.trim();
+      if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return t;
+      return "https://" + t;
     }
 
-    goBtn.onclick = go;
-    box.addEventListener("keydown", e => {
-      if (e.key === "Enter") go();
+    function googleSearch(text) {
+      return "https://www.google.com/search?q=" + encodeURIComponent(text.trim());
+    }
+
+    function go() {
+      const value = box.value.trim();
+      if (!value) return;
+      const target = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
+      location.href = target;
+    }
+
+    goBtn.addEventListener("click", go);
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        go();
+      }
     });
   </script>
 </body>
