@@ -1,0 +1,568 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, user-scalable=no"
+        />
+        <title>Dino Runner</title>
+        <style>
+            body {
+                margin: 0;
+                background: #f7f7f7;
+                font-family: 'Arial', sans-serif;
+                color: #535353;
+                overflow: hidden;
+            }
+            .wrap {
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+            canvas {
+                width: 96vw;
+                max-width: 900px;
+                height: auto;
+                background: #f7f7f7;
+                border: none;
+                display: block;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+            }
+            .controls {
+                width: 96vw;
+                max-width: 900px;
+                display: flex;
+                gap: 12px;
+                margin-top: 16px;
+            }
+            .btn {
+                flex: 1;
+                padding: 18px 12px;
+                background: #f7f7f7;
+                border: 3px solid #535353;
+                border-radius: 8px;
+                text-align: center;
+                font-weight: bold;
+                font-size: 18px;
+                user-select: none;
+                -webkit-user-select: none;
+                touch-action: manipulation;
+                transition: all 0.1s;
+                cursor: pointer;
+            }
+            .btn:active {
+                background: #e0e0e0;
+                transform: scale(0.98);
+            }
+            .hud {
+                width: 96vw;
+                max-width: 900px;
+                margin-top: 12px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 16px;
+                font-weight: bold;
+            }
+            .hi-score {
+                font-size: 14px;
+                opacity: 0.7;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <canvas id="c" width="900" height="300"></canvas>
+
+            <div class="controls">
+                <div class="btn" id="jumpBtn">JUMP</div>
+                <div class="btn" id="duckBtn">DUCK</div>
+            </div>
+
+            <div class="hud">
+                <div>
+                    <div id="score">00000</div>
+                    <div class="hi-score" id="hiScore">HI 00000</div>
+                </div>
+                <div id="msg" style="font-size: 14px; opacity: 0.8;">Press JUMP to start</div>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                var canvas = document.getElementById("c");
+                var ctx = canvas.getContext("2d");
+
+                var scoreEl = document.getElementById("score");
+                var hiScoreEl = document.getElementById("hiScore");
+                var msgEl = document.getElementById("msg");
+                var jumpBtn = document.getElementById("jumpBtn");
+                var duckBtn = document.getElementById("duckBtn");
+
+                var W = canvas.width;
+                var H = canvas.height;
+                var GROUND = 230;
+                var GRAV = 2400;
+                var hiScore = 0;
+
+                function clamp(v, a, b) {
+                    return v < a ? a : v > b ? b : v;
+                }
+                function rand(a, b) {
+                    return a + Math.random() * (b - a);
+                }
+                function pad(n, len) {
+                    var s = "" + Math.floor(n);
+                    while (s.length < len) s = "0" + s;
+                    return s;
+                }
+
+                var player = {
+                    x: 80,
+                    y: 0,
+                    w: 44,
+                    h: 47,
+                    vy: 0,
+                    onGround: true,
+                    duck: false,
+                    alive: true,
+                    jumpBuf: 0,
+                    coyote: 0,
+                    frame: 0,
+                    blinkTimer: 0
+                };
+                
+                var obstacles = [];
+                var clouds = [];
+                var birds = [];
+                var groundSegments = [];
+                var spawnT = 0;
+                var speed = 450;
+                var score = 0;
+                var tAlive = 0;
+                var duckHeld = false;
+                var gameStarted = false;
+                var dayNight = 0;
+
+                // Initialize ground segments
+                for (var i = 0; i < 12; i++) {
+                    groundSegments.push({
+                        x: i * 80,
+                        pattern: Math.floor(Math.random() * 3)
+                    });
+                }
+
+                // Initialize clouds
+                for (var i = 0; i < 4; i++) {
+                    clouds.push({
+                        x: rand(0, W),
+                        y: rand(20, 80),
+                        w: rand(40, 70),
+                        speed: rand(0.3, 0.6)
+                    });
+                }
+
+                function reset() {
+                    if (score > hiScore) {
+                        hiScore = score;
+                        hiScoreEl.innerHTML = "HI " + pad(hiScore, 5);
+                    }
+                    obstacles = [];
+                    birds = [];
+                    spawnT = 1200;
+                    speed = 450;
+                    score = 0;
+                    tAlive = 0;
+                    player.h = 47;
+                    player.y = GROUND - player.h;
+                    player.vy = 0;
+                    player.onGround = true;
+                    player.duck = false;
+                    player.alive = true;
+                    player.jumpBuf = 0;
+                    player.coyote = 0;
+                    player.frame = 0;
+                    player.blinkTimer = 0;
+                    duckHeld = false;
+                    gameStarted = false;
+                    msgEl.innerHTML = "Press JUMP to start";
+                }
+
+                function requestJump() {
+                    if (!gameStarted) {
+                        gameStarted = true;
+                        msgEl.innerHTML = "";
+                    }
+                    if (!player.alive) return;
+                    player.jumpBuf = 120;
+                }
+
+                function aabb(ax, ay, aw, ah, bx, by, bw, bh) {
+                    return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
+                }
+
+                function spawnObstacle() {
+                    var type = Math.random();
+                    if (type < 0.6) {
+                        // Cactus (small, medium, large)
+                        var size = Math.floor(Math.random() * 3);
+                        var h = size === 0 ? 35 : size === 1 ? 50 : 70;
+                        var w = size === 0 ? 17 : size === 1 ? 25 : 34;
+                        obstacles.push({ 
+                            x: W + 20, 
+                            y: GROUND - h, 
+                            w: w, 
+                            h: h,
+                            type: 'cactus',
+                            size: size
+                        });
+                    } else {
+                        // Flying bird
+                        var heights = [GROUND - 100, GROUND - 80, GROUND - 50];
+                        var birdY = heights[Math.floor(Math.random() * heights.length)];
+                        birds.push({
+                            x: W + 20,
+                            y: birdY,
+                            w: 46,
+                            h: 40,
+                            frame: 0
+                        });
+                    }
+                }
+
+                function onPress(el, downFn, upFn) {
+                    el.addEventListener("touchstart", function (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        downFn();
+                    }, { passive: false });
+                    el.addEventListener("touchend", function (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        upFn();
+                    }, { passive: false });
+                    el.addEventListener("mousedown", function (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        downFn();
+                    }, false);
+                    el.addEventListener("mouseup", function (e) {
+                        if (e.preventDefault) e.preventDefault();
+                        upFn();
+                    }, false);
+                    el.addEventListener("mouseleave", function () {
+                        upFn();
+                    }, false);
+                }
+
+                onPress(jumpBtn, function () { requestJump(); }, function () {});
+                onPress(duckBtn, function () { duckHeld = true; }, function () { duckHeld = false; });
+                onPress(canvas, function () {
+                    if (!player.alive) {
+                        reset();
+                        return;
+                    }
+                    requestJump();
+                }, function () {});
+
+                function update(dt) {
+                    if (!gameStarted) return;
+                    if (!player.alive) return;
+
+                    tAlive += dt;
+                    
+                    // Speed increases over time
+                    speed = 450 + Math.min(600, tAlive * 0.08);
+                    
+                    // Score increases
+                    score += dt * (speed / 250);
+                    scoreEl.innerHTML = pad(score, 5);
+
+                    // Day/night cycle every 700 points
+                    dayNight = Math.floor(score / 700) % 2;
+
+                    // Player animation
+                    player.frame += dt;
+                    player.blinkTimer -= dt;
+                    if (player.blinkTimer <= 0) {
+                        player.blinkTimer = rand(2000, 4000);
+                    }
+
+                    // Coyote time
+                    player.coyote = player.onGround ? 100 : Math.max(0, player.coyote - dt);
+                    if (player.jumpBuf > 0) player.jumpBuf -= dt;
+
+                    player.duck = !!duckHeld;
+
+                    // Hitbox changes
+                    var baseH = 47, duckH = 30;
+                    player.h = player.duck ? duckH : baseH;
+                    if (player.onGround) player.y = GROUND - player.h;
+
+                    // Jump
+                    var canJump = player.onGround || player.coyote > 0;
+                    if (player.jumpBuf > 0 && canJump && !player.duck) {
+                        player.vy = -950;
+                        player.onGround = false;
+                        player.coyote = 0;
+                        player.jumpBuf = 0;
+                    }
+
+                    // Gravity
+                    player.vy += GRAV * (dt / 1000);
+                    player.y += player.vy * (dt / 1000);
+
+                    var groundTop = GROUND - player.h;
+                    if (player.y >= groundTop) {
+                        player.y = groundTop;
+                        player.vy = 0;
+                        player.onGround = true;
+                    } else {
+                        player.onGround = false;
+                    }
+
+                    // Spawn obstacles
+                    spawnT -= dt;
+                    if (spawnT <= 0) {
+                        spawnObstacle();
+                        var base = clamp(1100 - (speed - 450) * 0.7, 600, 1100);
+                        spawnT = base + rand(-200, 300);
+                    }
+
+                    // Move clouds
+                    for (var i = 0; i < clouds.length; i++) {
+                        var cloud = clouds[i];
+                        cloud.x -= cloud.speed * (dt / 16);
+                        if (cloud.x + cloud.w < 0) {
+                            cloud.x = W + rand(0, 100);
+                            cloud.y = rand(20, 80);
+                        }
+                    }
+
+                    // Move ground
+                    for (var i = 0; i < groundSegments.length; i++) {
+                        groundSegments[i].x -= speed * (dt / 1000);
+                        if (groundSegments[i].x < -80) {
+                            groundSegments[i].x += 80 * 12;
+                        }
+                    }
+
+                    // Collision detection (tighter hitbox)
+                    var px = player.x + 4, py = player.y + 4;
+                    var pw = player.w - 8, ph = player.h - 8;
+
+                    // Check cactus collision
+                    for (var i = obstacles.length - 1; i >= 0; i--) {
+                        var o = obstacles[i];
+                        o.x -= speed * (dt / 1000);
+                        if (o.x + o.w < -20) {
+                            obstacles.splice(i, 1);
+                            continue;
+                        }
+                        if (aabb(px, py, pw, ph, o.x + 2, o.y + 2, o.w - 4, o.h - 4)) {
+                            player.alive = false;
+                            msgEl.innerHTML = "GAME OVER - Tap to restart";
+                        }
+                    }
+
+                    // Check bird collision
+                    for (var i = birds.length - 1; i >= 0; i--) {
+                        var b = birds[i];
+                        b.x -= speed * (dt / 1000);
+                        b.frame += dt * 0.01;
+                        if (b.x + b.w < -20) {
+                            birds.splice(i, 1);
+                            continue;
+                        }
+                        if (aabb(px, py, pw, ph, b.x + 4, b.y + 4, b.w - 8, b.h - 8)) {
+                            player.alive = false;
+                            msgEl.innerHTML = "GAME OVER - Tap to restart";
+                        }
+                    }
+                }
+
+                function drawDino(x, y, w, h, ducking, frame, blink) {
+                    var isDark = dayNight === 1;
+                    ctx.fillStyle = isDark ? "#fff" : "#535353";
+                    
+                    if (ducking) {
+                        // Body
+                        ctx.fillRect(x, y + 10, w, h - 10);
+                        // Head
+                        ctx.fillRect(x + w - 18, y, 18, 18);
+                        // Eye
+                        if (blink < 100) {
+                            ctx.fillStyle = isDark ? "#000" : "#fff";
+                            ctx.fillRect(x + w - 10, y + 6, 4, 4);
+                        }
+                        // Legs
+                        ctx.fillStyle = isDark ? "#fff" : "#535353";
+                        var legOffset = Math.floor(frame / 100) % 2;
+                        ctx.fillRect(x + 8 + legOffset * 8, y + h - 8, 6, 8);
+                        ctx.fillRect(x + 20 + (1 - legOffset) * 8, y + h - 8, 6, 8);
+                    } else {
+                        // Body
+                        ctx.fillRect(x + 10, y + 15, w - 10, h - 25);
+                        // Head
+                        ctx.fillRect(x + w - 16, y, 16, 20);
+                        // Eye
+                        if (blink < 100) {
+                            ctx.fillStyle = isDark ? "#000" : "#fff";
+                            ctx.fillRect(x + w - 10, y + 6, 4, 4);
+                        }
+                        // Legs
+                        ctx.fillStyle = isDark ? "#fff" : "#535353";
+                        var legOffset = Math.floor(frame / 100) % 2;
+                        ctx.fillRect(x + 14, y + h - 12, 8, 12);
+                        ctx.fillRect(x + 24 + legOffset * 2, y + h - 10, 8, 10);
+                        // Tail
+                        ctx.fillRect(x, y + 20, 12, 8);
+                        // Arm
+                        ctx.fillRect(x + 18, y + 18, 6, 10);
+                    }
+                }
+
+                function drawCactus(x, y, w, h, size) {
+                    var isDark = dayNight === 1;
+                    ctx.fillStyle = isDark ? "#fff" : "#535353";
+                    
+                    // Main body
+                    ctx.fillRect(x + w/2 - 6, y, 12, h);
+                    
+                    if (size >= 1) {
+                        // Left arm
+                        ctx.fillRect(x, y + h/3, 8, h/3);
+                        ctx.fillRect(x, y + h/3, 14, 8);
+                    }
+                    if (size === 2) {
+                        // Right arm
+                        ctx.fillRect(x + w - 8, y + h/2, 8, h/3);
+                        ctx.fillRect(x + w - 14, y + h/2, 14, 8);
+                    }
+                }
+
+                function drawBird(x, y, w, h, frame) {
+                    var isDark = dayNight === 1;
+                    ctx.fillStyle = isDark ? "#fff" : "#535353";
+                    
+                    var wingUp = Math.floor(frame) % 2 === 0;
+                    
+                    // Body
+                    ctx.fillRect(x + 12, y + 12, 24, 12);
+                    // Head
+                    ctx.fillRect(x + 30, y + 8, 12, 12);
+                    // Beak
+                    ctx.fillRect(x + 42, y + 12, 4, 4);
+                    // Eye
+                    ctx.fillRect(x + 36, y + 10, 2, 2);
+                    
+                    // Wings
+                    if (wingUp) {
+                        ctx.fillRect(x + 16, y, 14, 12);
+                    } else {
+                        ctx.fillRect(x + 16, y + 20, 14, 8);
+                    }
+                }
+
+                function drawCloud(x, y, w) {
+                    var isDark = dayNight === 1;
+                    ctx.fillStyle = isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)";
+                    
+                    // Simple cloud shape
+                    ctx.fillRect(x, y + 8, w, 12);
+                    ctx.fillRect(x + 8, y, w - 16, 20);
+                    ctx.fillRect(x + w/3, y + 4, w/3, 8);
+                }
+
+                function draw() {
+                    var isDark = dayNight === 1;
+                    var bgColor = isDark ? "#222" : "#f7f7f7";
+                    var groundColor = isDark ? "#444" : "#535353";
+                    
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(0, 0, W, H);
+
+                    // Draw clouds
+                    for (var i = 0; i < clouds.length; i++) {
+                        drawCloud(clouds[i].x, clouds[i].y, clouds[i].w);
+                    }
+
+                    // Draw ground line
+                    ctx.strokeStyle = groundColor;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(0, GROUND);
+                    ctx.lineTo(W, GROUND);
+                    ctx.stroke();
+
+                    // Draw ground decoration
+                    ctx.fillStyle = groundColor;
+                    for (var i = 0; i < groundSegments.length; i++) {
+                        var seg = groundSegments[i];
+                        if (seg.pattern === 0) {
+                            ctx.fillRect(seg.x + 10, GROUND + 5, 4, 3);
+                            ctx.fillRect(seg.x + 20, GROUND + 5, 4, 3);
+                        } else if (seg.pattern === 1) {
+                            ctx.fillRect(seg.x + 15, GROUND + 4, 3, 5);
+                            ctx.fillRect(seg.x + 22, GROUND + 6, 3, 3);
+                        }
+                    }
+
+                    // Draw obstacles
+                    for (var i = 0; i < obstacles.length; i++) {
+                        var o = obstacles[i];
+                        drawCactus(o.x, o.y, o.w, o.h, o.size);
+                    }
+
+                    // Draw birds
+                    for (var i = 0; i < birds.length; i++) {
+                        var b = birds[i];
+                        drawBird(b.x, b.y, b.w, b.h, b.frame);
+                    }
+
+                    // Draw player
+                    if (player.alive) {
+                        drawDino(player.x, player.y, player.w, player.h, player.duck, player.frame, player.blinkTimer);
+                    } else {
+                        // Dead dino (x eyes)
+                        ctx.fillStyle = isDark ? "#fff" : "#535353";
+                        ctx.fillRect(player.x + 10, player.y + 15, player.w - 10, player.h - 25);
+                        ctx.fillRect(player.x + player.w - 16, player.y, 16, 20);
+                        
+                        // X eyes
+                        ctx.fillStyle = isDark ? "#000" : "#fff";
+                        ctx.fillRect(player.x + player.w - 12, player.y + 4, 2, 8);
+                        ctx.fillRect(player.x + player.w - 14, player.y + 6, 6, 2);
+                        
+                        ctx.fillStyle = isDark ? "#fff" : "#535353";
+                        ctx.fillRect(player.x + 14, player.y + player.h - 12, 8, 12);
+                        ctx.fillRect(player.x + 24, player.y + player.h - 10, 8, 10);
+                        ctx.fillRect(player.x, player.y + 20, 12, 8);
+                        ctx.fillRect(player.x + 18, player.y + 18, 6, 10);
+                    }
+
+                    // Game over overlay
+                    if (!player.alive) {
+                        ctx.fillStyle = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)";
+                        ctx.fillRect(0, 0, W, H);
+                    }
+                }
+
+                var last = Date.now();
+                function loop() {
+                    var now = Date.now();
+                    var dt = clamp(now - last, 0, 50);
+                    last = now;
+                    update(dt);
+                    draw();
+                    setTimeout(function() { loop(); }, 16);
+                }
+
+                reset();
+                loop();
+            })();
+        </script>
+    </body>
+</html>
