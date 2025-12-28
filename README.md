@@ -155,5 +155,3 @@ This project provides a clean, controller-friendly home screen with **Games, App
 
 This project is experimental and for educational / personal use only.
 Nintendo Switch is a trademark of Nintendo.
-- Generate a **docs/** folder with usage guides
-```
