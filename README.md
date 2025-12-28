@@ -1,11 +1,3 @@
-Ahh got it — you want a **`README.md` for the SwitchBru launcher project**, not TypeScript in general.
-Here’s a **clean, proper README** that fits exactly what you built: SwitchBru launcher, games/apps, controller nav, search, bookmarks, JSON-driven, Switch browser–friendly.
-
-You can drop this straight into your repo as **`README.md`**.
-
----
-
-```md
 # SwitchBru Applications Launcher
 
 A modern, Nintendo Switch–friendly web launcher for **SwitchBru DNS** environments.
