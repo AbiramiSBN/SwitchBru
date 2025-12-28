@@ -1,27 +1,60 @@
 {
   "games": [
-    { "label": "Dino Game", "path": "/Dino-Game" },
-    { "label": "Seraph Games", "path": "https://seraphgames.vercel.app" },
-
-    { "label": "Game 3", "path": "/games/game3" },
-    { "label": "Game 4", "path": "/games/game4" },
-    { "label": "Game 5", "path": "/games/game5" },
-    { "label": "Game 6", "path": "/games/game6" },
-    { "label": "Game 7", "path": "/games/game7" },
-    { "label": "Game 8", "path": "/games/game8" },
-    { "label": "Game 9", "path": "/games/game9" },
-    { "label": "Game 10", "path": "/games/game10" }
+    {
+      "label": "Dino Game",
+      "path": "/Dino-Game",
+      "icon": "🦖"
+    },
+    {
+      "label": "Seraph Games",
+      "path": "https://seraphgames.vercel.app",
+      "icon": "🌐"
+    },
+    {
+      "label": "ArmorGames",
+      "path": "https://armorgames.com",
+      "icon": "🕹️"
+    },
+    { "label": "Game 3", "path": "/games/game3", "icon": "🎮" },
+    { "label": "Game 4", "path": "/games/game4", "icon": "🎮" },
+    { "label": "Game 5", "path": "/games/game5", "icon": "🎮" },
+    { "label": "Game 6", "path": "/games/game6", "icon": "🎮" },
+    { "label": "Game 7", "path": "/games/game7", "icon": "🎮" },
+    { "label": "Game 8", "path": "/games/game8", "icon": "🎮" },
+    { "label": "Game 9", "path": "/games/game9", "icon": "🎮" }
   ],
   "apps": [
-    { "label": "App 1", "path": "/app1" },
-    { "label": "App 2", "path": "/app2" },
-    { "label": "App 3", "path": "/app3" },
-    { "label": "App 4", "path": "/app4" },
-    { "label": "App 5", "path": "/app5" },
-    { "label": "App 6", "path": "/app6" },
-    { "label": "App 7", "path": "/app7" },
-    { "label": "App 8", "path": "/app8" },
-    { "label": "App 9", "path": "/app9" },
-    { "label": "App 10", "path": "/app10" }
+    { "label": "App 1", "path": "/app1", "icon": "📱" },
+    { "label": "App 2", "path": "/app2", "icon": "📱" },
+    { "label": "App 3", "path": "/app3", "icon": "📱" },
+    { "label": "App 4", "path": "/app4", "icon": "📱" },
+    { "label": "App 5", "path": "/app5", "icon": "📱" },
+    { "label": "App 6", "path": "/app6", "icon": "📱" },
+    { "label": "App 7", "path": "/app7", "icon": "📱" },
+    { "label": "App 8", "path": "/app8", "icon": "📱" },
+    { "label": "App 9", "path": "/app9", "icon": "📱" },
+    { "label": "App 10", "path": "/app10", "icon": "📱" }
+  ],
+  "web": [
+    {
+      "label": "Google",
+      "path": "https://www.google.com",
+      "icon": "🔎"
+    },
+    {
+      "label": "YouTube",
+      "path": "https://www.youtube.com",
+      "icon": "▶️"
+    },
+    {
+      "label": "Wikipedia",
+      "path": "https://www.wikipedia.org",
+      "icon": "📚"
+    },
+    {
+      "label": "SwitchBru DNS Dashboard",
+      "path": "https://dns.switchbru.com/",
+      "icon": "🧭"
+    }
   ]
 }
