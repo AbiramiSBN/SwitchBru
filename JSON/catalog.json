@@ -2,7 +2,7 @@
   "games": [
     {
       "label": "Dino Game",
-      "path": "/Dino-Game",
+      "path": "/games/DinoGame/",
       "icon": "🦖"
     },
     {
