@@ -6,18 +6,15 @@
   <title>SwitchBru Applications</title>
 
   <style>
-    :root{
-      /* Defaults (overridden by settings if present) */
-      --text:#ffffff;
-      --titleColor:#ffffff;
-      --tileLabelColor:#ffffff;
-      --buttonTextColor:#ffffff;
-
+    :root {
+      --text: #ffffff;
+      --titleColor: #ffffff;
+      --tileLabelColor: #ffffff;
+      --buttonTextColor: #ffffff;
       --wallpaper: url("/assets/wallpaper.jpeg");
-
       --muted: rgba(255,255,255,0.85);
 
-      --tileBg: rgba(56, 76, 160, 0.55);
+      --tileBg: rgba(56,76,160,0.55);
       --tileBorder: rgba(255,255,255,0.18);
       --tileShadow: 0 18px 40px rgba(0,0,0,0.55);
       --tileRadius: 22px;
@@ -26,332 +23,270 @@
       --tileH: 160px;
 
       --titleGlow: 1;
-
       --chipBg: rgba(0,0,0,0.35);
       --chipBorder: rgba(255,255,255,0.18);
       --chipHover: rgba(255,255,255,0.12);
       --accent: rgba(120,160,255,0.85);
     }
 
-    *{ box-sizing:border-box; }
+    * { box-sizing: border-box; }
 
-    body{
-      margin:0;
-      min-height:100vh;
+    body {
+      margin: 0;
+      min-height: 100vh;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
       background:
         radial-gradient(900px 520px at 52% 28%, rgba(120,160,255,0.24), transparent 62%),
         linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.78)),
         var(--wallpaper) center/cover no-repeat fixed;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 24px;
     }
 
-    .screen{
-      width: min(980px, 100%);
-      text-align:center;
-    }
+    .screen { width: min(980px,100%); text-align:center; }
 
-    /* Topbar */
-    .topbar{
-      width: min(860px, 100%);
+    .topbar {
+      width: min(860px,100%);
       margin: 0 auto 10px;
       display:flex;
-      gap: 10px;
+      gap:10px;
       align-items:center;
       justify-content:center;
       flex-wrap: wrap;
     }
 
-    .searchWrap{
-      flex: 1 1 520px;
+    .searchWrap {
+      flex:1 1 520px;
       display:flex;
       align-items:center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      border: 1px solid var(--chipBorder);
+      gap:10px;
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid var(--chipBorder);
       background: var(--chipBg);
-      backdrop-filter: blur(6px);
+      backdrop-filter:blur(6px);
       box-shadow: 0 14px 28px rgba(0,0,0,0.35);
     }
 
-    .searchIcon{
+    .searchIcon {
       width: 36px;
       height: 36px;
       border-radius: 12px;
       display:grid;
       place-items:center;
       background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.14);
+      border:1px solid rgba(255,255,255,0.14);
       user-select:none;
       color: var(--buttonTextColor);
     }
 
-    .searchInput{
-      flex: 1;
-      border: none;
-      outline: none;
-      background: transparent;
+    .searchInput {
+      flex:1;
+      border:none;
+      outline:none;
+      background:transparent;
       color: var(--text);
-      font-size: 16px;
-      padding: 6px 2px;
-      min-width: 200px;
+      font-size:16px;
+      padding:6px 2px;
+      min-width:200px;
     }
-    .searchInput::placeholder{ color: rgba(255,255,255,0.70); }
+    .searchInput::placeholder { color: rgba(255,255,255,0.70); }
 
-    .goBtn{
-      border: 1px solid rgba(255,255,255,0.18);
+    .goBtn {
+      border:1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.10);
       color: var(--buttonTextColor);
-      border-radius: 14px;
-      padding: 10px 14px;
-      cursor: pointer;
+      border-radius:14px;
+      padding:10px 14px;
+      cursor:pointer;
       transition: background 0.15s ease, transform 0.15s ease;
-      user-select:none;
     }
-    .goBtn:hover{
+    .goBtn:hover {
       background: var(--chipHover);
       transform: translateY(-1px);
     }
 
-    .chip{
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(0,0,0,0.28);
-      color: var(--buttonTextColor);
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 13px;
+    .chip {
+      border:1px solid rgba(255,255,255,0.16);
+      background:rgba(0,0,0,0.28);
+      color:var(--buttonTextColor);
+      border-radius:999px;
+      padding:10px 14px;
+      font-size:13px;
       display:flex;
-      gap: 8px;
+      gap:8px;
       align-items:center;
-      cursor: pointer;
+      cursor:pointer;
       user-select:none;
-      transition: background 0.15s ease, transform 0.15s ease;
+      transition:background 0.15s ease,transform 0.15s ease;
     }
-    .chip:hover{
+    .chip:hover {
       background: var(--chipHover);
-      transform: translateY(-1px);
+      transform:translateY(-1px);
     }
-
-    .dot{
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--accent);
+    .dot {
+      width:8px;height:8px;border-radius:999px;
+      background:var(--accent);
       box-shadow: 0 0 14px rgba(120,160,255,0.8);
     }
 
-    /* Title bloom */
-    .titleWrap{
-      position: relative;
-      display: inline-block;
-      margin-top: 6px;
+    .titleWrap {
+      position:relative;
+      display:inline-block;
+      margin-top:6px;
     }
 
-    .titleWrap::before{
-      content: "SwitchBru Applications";
-      position: absolute;
-      inset: 0;
-      color: var(--titleColor);
-      filter: blur(16px);
-      opacity: calc(0.9 * var(--titleGlow));
-      z-index: 0;
-      pointer-events: none;
+    .titleWrap::before {
+      content:"SwitchBru Applications";
+      position:absolute;
+      inset:0;
+      color:var(--titleColor);
+      filter:blur(16px);
+      opacity:calc(0.9 * var(--titleGlow));
+      z-index:0;
     }
 
-    .title{
-      position: relative;
-      z-index: 1;
-      font-size: clamp(52px, 8vw, 104px);
-      letter-spacing: 1px;
-      margin: 0;
-      font-weight: 800;
-      color: var(--titleColor);
-      text-shadow:
-        0 0 24px rgba(255,255,255,0.35),
-        0 0 48px rgba(120,160,255,0.25);
+    .title {
+      position:relative;
+      z-index:1;
+      font-size:clamp(52px,8vw,104px);
+      letter-spacing:1px;
+      margin:0;
+      font-weight:800;
+      color:var(--titleColor);
     }
 
-    .version{
-      margin-top: 10px;
-      font-size: 18px;
-      color: var(--muted);
+    .version {
+      margin-top:10px;
+      font-size:18px;
+      color:var(--muted);
     }
 
-    .tiles{
-      margin-top: 30px;
+    .tiles {
+      margin-top:30px;
       display:flex;
       justify-content:center;
-      gap: 22px;
-      flex-wrap: wrap;
+      gap:22px;
+      flex-wrap:wrap;
     }
 
     .tile{
-      width: var(--tileW);
-      height: var(--tileH);
-      border-radius: var(--tileRadius);
-      border: 1px solid var(--tileBorder);
-      background: var(--tileBg);
-      box-shadow: var(--tileShadow);
-      cursor: pointer;
+      width:var(--tileW);
+      height:var(--tileH);
+      border-radius:var(--tileRadius);
+      border:1px solid var(--tileBorder);
+      background:var(--tileBg);
+      box-shadow:var(--tileShadow);
+      cursor:pointer;
       transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-      position: relative;
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-      padding: 14px 16px;
       display:flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction:column;
+      justify-content:space-between;
+      align-items:center;
+      padding:14px 16px;
     }
 
-    .tile:hover{
-      transform: translateY(-3px);
-      background: rgba(70, 96, 190, 0.60);
-      border-color: rgba(255,255,255,0.28);
+    .tile:hover {
+      transform:translateY(-3px);
+      background:rgba(70,96,190,0.60);
+      border-color:rgba(255,255,255,0.28);
     }
 
-    .tile::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(120px 90px at 35% 25%, rgba(255,255,255,0.12), transparent 65%),
-        linear-gradient(transparent, rgba(0,0,0,0.25));
-      pointer-events:none;
-    }
-
-    .tileIcon{
-      position: relative;
-      z-index: 1;
-      width: 64px;
-      height: 64px;
-      border-radius: 18px;
+    .tileIcon {
+      width:64px;
+      height:64px;
+      border-radius:18px;
       display:grid;
       place-items:center;
-      font-size: 34px;
-      background: rgba(0,0,0,0.25);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow: 0 12px 24px rgba(0,0,0,0.35);
-      margin-top: 6px;
-      user-select: none;
-      color: var(--buttonTextColor);
+      font-size:34px;
+      background:rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.18);
+      color:var(--buttonTextColor);
     }
 
-    .tileLabel{
-      position: relative;
-      z-index: 1;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      text-transform: lowercase;
-      padding-bottom: 4px;
-      color: var(--tileLabelColor);
-      text-shadow: 0 2px 12px rgba(0,0,0,0.45);
+    .tileLabel {
+      font-size:20px;
+      font-weight:700;
+      text-transform:lowercase;
+      color:var(--tileLabelColor);
     }
   </style>
 </head>
 
 <body>
   <main class="screen">
-    <!-- Search / URL + bookmarks -->
+
     <div class="topbar">
       <div class="searchWrap">
         <div class="searchIcon">🔎</div>
-        <input
-          id="omnibox"
-          class="searchInput"
-          type="text"
-          inputmode="url"
-          autocomplete="off"
-          placeholder="Type a URL (youtube.com) or search (mario kart tips)…"
-        />
+        <input id="omnibox" class="searchInput" type="text" placeholder="Search or URL…" />
         <button class="goBtn" id="goBtn">Go</button>
       </div>
 
-      <button class="chip" onclick="location.href='https://www.google.com/'" title="Google">
-        <span class="dot"></span>
-        <span>Google</span>
+      <button class="chip" onclick="location.href='https://www.google.com/'">
+        <span class="dot"></span><span>Google</span>
       </button>
-
-      <button class="chip" onclick="location.href='https://dns.switchbru.com/'" title="Old SwitchBru Dashboard">
+      <button class="chip" onclick="location.href='https://dns.switchbru.com/'">
         🧭 SwitchBru DNS
       </button>
     </div>
 
-    <div class="titleWrap">
-      <h1 class="title">SwitchBru Applications</h1>
-    </div>
-
+    <div class="titleWrap"><h1 class="title">SwitchBru Applications</h1></div>
     <div class="version" id="versionText">version 10</div>
 
     <div class="tiles">
-      <button class="tile" onclick="location.href='/games/'" aria-label="Games">
-        <div class="tileIcon">🎮</div>
-        <div class="tileLabel">games</div>
+      <button class="tile" onclick="location.href='/games/'">
+        <div class="tileIcon">🎮</div><div class="tileLabel">games</div>
       </button>
-
-      <button class="tile" onclick="location.href='/apps/'" aria-label="Apps">
-        <div class="tileIcon">🧩</div>
-        <div class="tileLabel">apps</div>
+      <button class="tile" onclick="location.href='/apps/'">
+        <div class="tileIcon">🧩</div><div class="tileLabel">apps</div>
       </button>
-
-      <button class="tile" onclick="location.href='/settings/'" aria-label="Settings">
-        <div class="tileIcon">⚙️</div>
-        <div class="tileLabel">settings</div>
+      <button class="tile" onclick="location.href='/web/'">
+        <div class="tileIcon">🌐</div><div class="tileLabel">web</div>
+      </button>
+      <button class="tile" onclick="location.href='/settings/'">
+        <div class="tileIcon">⚙️</div><div class="tileLabel">settings</div>
       </button>
     </div>
   </main>
 
   <script>
-    // Apply settings from /settings/
-    (function applySettings(){
-      try{
+    (function applySettings() {
+      try {
         const s = JSON.parse(localStorage.getItem("sb_settings") || "null");
-        if(!s) return;
-
+        if (!s) return;
         const root = document.documentElement;
 
-        // Wallpaper
         if (s.wallpaperUrl && /^https?:\/\//i.test(s.wallpaperUrl)) {
           root.style.setProperty("--wallpaper", `url("${s.wallpaperUrl}")`);
         } else if (s.wallpaperPreset) {
           root.style.setProperty("--wallpaper", `url("${s.wallpaperPreset}")`);
         }
 
-        // Colors
         if (s.text) root.style.setProperty("--text", s.text);
         if (s.title) root.style.setProperty("--titleColor", s.title);
         if (s.tile) root.style.setProperty("--tileLabelColor", s.tile);
         if (s.button) root.style.setProperty("--buttonTextColor", s.button);
 
-        // Glow
         root.style.setProperty("--titleGlow", s.glow ? "1" : "0");
 
-        // Tile size
         if (s.tileSize === "small") {
           root.style.setProperty("--tileW", "170px");
           root.style.setProperty("--tileH", "145px");
         } else if (s.tileSize === "large") {
           root.style.setProperty("--tileW", "220px");
           root.style.setProperty("--tileH", "175px");
-        } else {
-          root.style.setProperty("--tileW", "190px");
-          root.style.setProperty("--tileH", "160px");
         }
 
-        // Version text
         if (typeof s.version === "string" && s.version.trim()) {
           document.getElementById("versionText").textContent = s.version.trim();
         }
       } catch {}
     })();
 
-    // Omnibox behavior (URL vs Google search)
     const box = document.getElementById("omnibox");
     const goBtn = document.getElementById("goBtn");
 
@@ -360,8 +295,7 @@
       if (!t) return false;
       if (/^[a-zA-Z][a-zA-Z0-9+.-]*:\/\//.test(t)) return true;
       if (/\s/.test(t)) return false;
-      if (t.includes(".") || t === "localhost" || /^\d{1,3}(\.\d{1,3}){3}$/.test(t)) return true;
-      return false;
+      return t.includes(".");
     }
 
     function toUrl(text) {
@@ -377,16 +311,12 @@
     function go() {
       const value = box.value.trim();
       if (!value) return;
-      const target = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
-      location.href = target;
+      location.href = looksLikeUrl(value) ? toUrl(value) : googleSearch(value);
     }
 
     goBtn.addEventListener("click", go);
-    box.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        go();
-      }
+    box.addEventListener("keydown", e => {
+      if (e.key === "Enter") go();  
     });
   </script>
 </body>
