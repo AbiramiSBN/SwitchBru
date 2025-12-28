@@ -24,7 +24,7 @@
     { "label": "Game 9", "path": "/games/game9", "icon": "🎮" }
   ],
   "apps": [
-    { "label": "PerminiGPT", "path": "https://perminigpt.vercel.app/", "icon": "🤖" },
+    { "label": "PerminiGPT", "path": "/apps/magicai", "icon": "🤖" },
     { "label": "App 1", "path": "/app1", "icon": "📱" },
     { "label": "App 2", "path": "/app2", "icon": "📱" },
     { "label": "App 3", "path": "/app3", "icon": "📱" },
