@@ -180,5 +180,4 @@ Designed for Nintendo Switch browser limitations
 ---
 
 ## License
-
-MIT 
+GNU GENERAL PUBLIC LICENSE ()
