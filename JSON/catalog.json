@@ -16,7 +16,7 @@
       "icon": "🕹️"
     },
     { "label": "Kongregate", "path": "https://www.kongregate.com/", "icon": "🎮" },
-    { "label": "Game 4", "path": "/games/game4", "icon": "🎮" },
+    { "label": "Poki", "path": "https://poki.com/", "icon": "🎮" },
     { "label": "Game 5", "path": "/games/game5", "icon": "🎮" },
     { "label": "Game 6", "path": "/games/game6", "icon": "🎮" },
     { "label": "Game 7", "path": "/games/game7", "icon": "🎮" },
